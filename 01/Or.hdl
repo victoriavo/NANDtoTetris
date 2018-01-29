@@ -19,7 +19,6 @@ CHIP Or {
     OUT out;
 
     PARTS:
-    // Put your code here:
     Not(in=a, out=nota); //negate a --> ~a
     Not(in=b, out=notb); //negate b --> ~b
     And(a=nota, b=notb, out=andout); //~a & ~b
