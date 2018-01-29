@@ -7,6 +7,11 @@
  * Or gate:
  * out = 1 if (a == 1 or b == 1)
  *       0 otherwise
+ *
+ * Solution logic:
+ * ~(a + b) is equivalent to ~a & ~b
+ * so ~(~a & ~b) is equal to ~(~(a + b)),
+ * which cancels out to a + b
  */
 
 CHIP Or {
@@ -15,4 +20,9 @@ CHIP Or {
 
     PARTS:
     // Put your code here:
+    Not(in=a, out=nota); //negate a --> ~a
+    Not(in=b, out=notb); //negate b --> ~b
+    And(a=nota, b=notb, out=andout); //~a & ~b
+    Not(in=andout, out=out); //negate (~a & ~b) --> a + b
+
 }
