@@ -6,6 +6,11 @@
 /**
  * Exclusive-or gate:
  * out = not (a == b)
+ * Solution logic
+ * Begin by taking the initial inputs a and b into a nand gate
+ * Cascade the output of that nand gate
+ * into two nand gates that take the initial input a and b, respectively
+ * Nand the output of those two nand gates to get the Xor output
  */
 
 CHIP Xor {
@@ -14,4 +19,9 @@ CHIP Xor {
 
     PARTS:
     // Put your code here:
+    Nand(a=a, b=b, out=nandinitial); // ~(a & b)
+    Nand(a=a, b=nandinitial, out=nanda); //~(a & ~(a & b)) --> ~a + (a & b)
+    Nand(a=nandinitial, b=b, out=nandb); //~(~(a & b) & b) --> (a & b) + ~b
+    Nand(a=nanda, b=nandb, out=out); // ~([~a + (a & b)] & [(a & b) + ~b])
+
 }
