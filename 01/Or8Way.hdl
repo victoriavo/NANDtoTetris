@@ -6,6 +6,10 @@
 /**
  * 8-way Or: 
  * out = (in[0] or in[1] or ... or in[7])
+ *
+ * We can split this problem up by using the Or-operation in twos
+ * because of the associative law. We merge the separate operations
+ * back together to get the final output.
  */
 
 CHIP Or8Way {
@@ -14,4 +18,13 @@ CHIP Or8Way {
 
     PARTS:
     // Put your code here:
+    Or(a=in[0], b=in[1], out=out1);
+    Or(a=in[2], b=in[3], out=out2);
+    Or(a=in[4], b=in[5], out=out3);
+    Or(a=in[6], b=in[7], out=out4);
+
+    Or(a=out1, b=out2, out=lowerors);
+    Or(a=out3, b=out4, out=higherors);
+
+    Or(a=lowerors, b=higherors, out=out);
 }
