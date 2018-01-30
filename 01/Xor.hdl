@@ -19,9 +19,11 @@ CHIP Xor {
 
     PARTS:
     // Put your code here:
-    Nand(a=a, b=b, out=nandinitial); // ~(a & b)
-    Nand(a=a, b=nandinitial, out=nanda); //~(a & ~(a & b)) --> ~a + (a & b)
-    Nand(a=nandinitial, b=b, out=nandb); //~(~(a & b) & b) --> (a & b) + ~b
-    Nand(a=nanda, b=nandb, out=out); // ~([~a + (a & b)] & [(a & b) + ~b])
+    Nand(a=a, b=b, out=nandinitial); // ~(a & b) --> ~a + ~b
+    Nand(a=a, b=nandinitial, out=nanda); //~(a & (~a + ~b)) --> ~(a + ~b) --> ~a & b
+    Nand(a=nandinitial, b=b, out=nandb); //~((~a + ~b) & b) --> ~(~a + b) --> a & ~b
+    Nand(a=nanda, b=nandb, out=out); // ~([~a & b] & [a & ~b]) --> ~[~a & b] + ~[a & ~b]
+    //continued proof from line above:
+    //~[~a & b] + ~[a & ~b] --> (a + ~b) + (~a + b) This is correct!
 
 }
