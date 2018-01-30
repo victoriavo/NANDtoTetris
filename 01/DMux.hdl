@@ -7,6 +7,9 @@
  * Demultiplexor:
  * {a, b} = {in, 0} if sel == 0
  *          {0, in} if sel == 1
+ *
+ * output_pin1 = selector & input
+ * output_pin0 = ~selector & input
  */
 
 CHIP DMux {
@@ -15,4 +18,8 @@ CHIP DMux {
 
     PARTS:
     // Put your code here:
+    Not(in=sel, out=notsel); //negate selector for output pin b
+    And(a=in, b=notsel, out=a);
+    And(a=in, b=sel, out=b);
+
 }
