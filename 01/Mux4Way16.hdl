@@ -9,6 +9,12 @@
  *       b if sel == 01
  *       c if sel == 10
  *       d if sel == 11
+ *
+ * can solve this by using two 2 to 1 muxes as inputs to another mux which gives the output
+ * mux 1 takes care of input 1 and input 2
+ * mux 2 takes care of input 3 and input 4
+ * selector bits choose input based upon its number in decimal
+ * a = 0, b = 1, c = 2, d = 3
  */
 
 CHIP Mux4Way16 {
@@ -17,4 +23,5 @@ CHIP Mux4Way16 {
 
     PARTS:
     // Put your code here:
+
 }
