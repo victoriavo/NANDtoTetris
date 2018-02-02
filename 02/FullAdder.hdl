@@ -14,4 +14,7 @@ CHIP FullAdder {
 
     PARTS:
     // Put you code here:
+    HalfAdder(a=a, b=b, sum=HA1sum, carry=HA1carry); //HalfAdder for inputs a and b
+    HalfAdder(a=HA1sum, b=c, sum=sum, carry=HA2carry); //take output of HalfAdder of a and b and perform HalfAdder operation with input c, the first output is the sum of the full add
+    Or(a=HA2carry, b=HA1carry, out=carry); //Combine carry bits in Or operation to get the carry output for the 3 inputs
 }
