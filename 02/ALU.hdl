@@ -44,39 +44,30 @@ CHIP ALU {
     PARTS:
    // Put you code here:
 
-   //If zx then set x = 0
-    //And(a=zx, b=zx, x[1..15]=false)
-    //And(a=zx, b=zx,out=false);
+    //We can set 15 false bits (15 0 bits) by using them as an input
+    //Do we leave the input alone or do we change it?
 
-   //If nx then set x = !x
-   Not16(in=x, out=notx);
-   //And(a=nx, b=nx, x=notx);
-   And16(a=nx, b=nx, out=notx);
+    //X input treatments; zero it? negate it?
 
-   //If zy then set y = 0
-   And(a=zy, b=zy, y[1..15]=false);
+    Mux16(a=x, b[0..15]=false, sel=zx, out=zerox); //if sel/zx = 1, then we set x = 0
 
-   //If ny then set y = !y
-   Not(in=y, out=noty);
-   And(a=ny, b=ny, y=noty);
+    //After checking if the input needs to be zeroed out, then check for negation conditions by passing in the zero-checked result
+    Not16(in=x, out=notx); //get negation of x
+    Mux16(a=zerox, b=notx, sel=nx, out=negatex); //if sel/nx = 1, then we set x = !x
 
-   //If (f==1) set out = x + y
-   Or(a=x, b=y, out=xory);
-   And(a=f, b=f, out=xory);
+    //Y input treatments; zero it? negate it?
 
-   //If (f==0) set out = x & y
-   And(a=x, b=y, out=xandy);
-   Nand(a=f, b=f, out=xandy);
+    Mux16(a=y, b[0..15]=false, sel=zy, out=zeroy); //if sel/zy = 1, then we set y = 0
 
-   //If (no==1) set out = !out
-   Not(in=out, out=notout);
-   And(a=no, b=no, out=notout);
-
-   //If (out == 0) set zr = 1
-   And(a=out, b=false, zr=true);
-
-   //If (out < 0) set ng = 1
-   And(a=out[15], b=true, ng=true);
+    Not16(in=y, out=noty); //get negation of y
+    Mux16(a=zeroy, b=noty, sel=ny, out=negatey); //if sel/ny = 1, then we set y = !y
+    //---------------------------------------------------------------------------------
 
 
+    //Now we can look at the input of f, which will let us know which function or operation to treat x and y
+    //if (f==1), out = x + y
+    //else (f==0), out = x & y
+
+    Or(a=negatex, b=negatey, out=xory);
+    And(a=negatex, b=negatey, out=xandy);
 }
