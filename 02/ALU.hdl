@@ -43,4 +43,40 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+
+   //If zx then set x = 0
+    //And(a=zx, b=zx, x[1..15]=false)
+    //And(a=zx, b=zx,out=false);
+
+   //If nx then set x = !x
+   Not16(in=x, out=notx);
+   //And(a=nx, b=nx, x=notx);
+   And16(a=nx, b=nx, out=notx);
+
+   //If zy then set y = 0
+   And(a=zy, b=zy, y[1..15]=false);
+
+   //If ny then set y = !y
+   Not(in=y, out=noty);
+   And(a=ny, b=ny, y=noty);
+
+   //If (f==1) set out = x + y
+   Or(a=x, b=y, out=xory);
+   And(a=f, b=f, out=xory);
+
+   //If (f==0) set out = x & y
+   And(a=x, b=y, out=xandy);
+   Nand(a=f, b=f, out=xandy);
+
+   //If (no==1) set out = !out
+   Not(in=out, out=notout);
+   And(a=no, b=no, out=notout);
+
+   //If (out == 0) set zr = 1
+   And(a=out, b=false, zr=true);
+
+   //If (out < 0) set ng = 1
+   And(a=out[15], b=true, ng=true);
+
+
 }
