@@ -44,12 +44,19 @@ CHIP ALU {
     PARTS:
    // Put you code here:
 
+    //if zx = 1 & nx = 0, x = 0
+    //if zx = 1 & nx = 1, x = 1
+    //if zx = 0 & nx = 0, x = x
+    //if zx = 0 & nx = 1, x = !x
+
+    /*
+
     //We can set 15 false bits (15 0 bits) by using them as an input
     //Do we leave the input alone or do we change it?
 
     //X input treatments; zero it? negate it?
 
-    Mux16(a=x, b[0..15]=false, sel=zx, out=zerox); //if sel/zx = 1, then we set x = 0
+    Mux16(a=x, b=false, sel=zx, out=zerox); //if sel/zx = 1, then we set x = 0
 
     //After checking if the input needs to be zeroed out, then check for negation conditions by passing in the zero-checked result
     Not16(in=x, out=notx); //get negation of x
@@ -57,10 +64,11 @@ CHIP ALU {
 
     //Y input treatments; zero it? negate it?
 
-    Mux16(a=y, b[0..15]=false, sel=zy, out=zeroy); //if sel/zy = 1, then we set y = 0
+    Mux16(a=y, b=false, sel=zy, out=zeroy); //if sel/zy = 1, then we set y = 0
 
     Not16(in=y, out=noty); //get negation of y
     Mux16(a=zeroy, b=noty, sel=ny, out=negatey); //if sel/ny = 1, then we set y = !y
+    */
     //---------------------------------------------------------------------------------
 
 
@@ -91,6 +99,7 @@ CHIP ALU {
     Mux(a=true, b=false, sel=outnotzero, out=zr);
     //ng flag
     Mux(a=false, b=true, sel=mostsigbit, out=ng);
+
 
 
 }
