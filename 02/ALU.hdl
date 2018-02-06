@@ -68,6 +68,28 @@ CHIP ALU {
     //if (f==1), out = x + y
     //else (f==0), out = x & y
 
-    Or(a=negatex, b=negatey, out=xory);
-    And(a=negatex, b=negatey, out=xandy);
+    //two output (operation) options
+    Or16(a=negatex, b=negatey, out=xory);
+    And16(a=negatex, b=negatey, out=xandy);
+
+    //now we let the value of f determine which operation is chosen
+    Mux16(a=xandy, b=xory, sel=f, out=operationout);
+    //---------------------------------------------------------------------------------
+
+    //Do we need to negate the output? Check by input value of no
+    Not16(in=operationout, out[0..7]=out1, out[8..15]=out2, out[15]=mostsigbit); //negate output
+
+    //Now let's see whether we set our flags zr and ng
+    //zr flag
+    //we need to check if all bits are zero (out = 0), so we can use the Or gate to see if any bit is equal to 1, but we have to perform an Or across all 16 bits, but we don't have an Or16Way chip
+    //However, we have a Or8Way chip so we can use a couple of those to get an Or16Way
+    Or8Way(in=out1, out=zerochecklow);
+    Or8Way(in=out2, out=zerocheckhigh);
+    //if out is true for either of the Or8Ways, then out != 0
+    Or(a=zerochecklow, b=zerocheckhigh, out=outnotzero);
+    Mux(a=true, b=false, sel=outnotzero, out=zr);
+    //ng flag
+    Mux(a=true, b=false, sel=mostsigbit, out=ng);
+
+
 }
