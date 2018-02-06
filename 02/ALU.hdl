@@ -69,15 +69,16 @@ CHIP ALU {
     //else (f==0), out = x & y
 
     //two output (operation) options
-    Or16(a=negatex, b=negatey, out=xory);
+    Add16(a=negatex, b=negatey, out=xplusy);
     And16(a=negatex, b=negatey, out=xandy);
 
     //now we let the value of f determine which operation is chosen
-    Mux16(a=xandy, b=xory, sel=f, out=operationout);
+    Mux16(a=xandy, b=xplusy, sel=f, out=operationout);
     //---------------------------------------------------------------------------------
 
     //Do we need to negate the output? Check by input value of no
-    Not16(in=operationout, out[0..7]=out1, out[8..15]=out2, out[15]=mostsigbit); //negate output
+    Not16(in=operationout, out=negateout); //negate output
+    Mux16(a=operationout, b=negateout, sel=no, out[0..7]=out1, out[8..15]=out2, out[15]=mostsigbit);
 
     //Now let's see whether we set our flags zr and ng
     //zr flag
@@ -89,7 +90,7 @@ CHIP ALU {
     Or(a=zerochecklow, b=zerocheckhigh, out=outnotzero);
     Mux(a=true, b=false, sel=outnotzero, out=zr);
     //ng flag
-    Mux(a=true, b=false, sel=mostsigbit, out=ng);
+    Mux(a=false, b=true, sel=mostsigbit, out=ng);
 
 
 }
