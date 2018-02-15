@@ -16,4 +16,25 @@ CHIP RAM16K {
 
     PARTS:
     // Put your code here:
+
+    //We can use the most significant bits from the address
+    //to choose which register range the given address wants to access
+    DMux4Way(in=load, sel=address[12..13],
+    a=regs0, b=regs1, c=regs2, d=regs3);
+
+    //Addresses: 00 000 000 000 000 - 00 111 111 111 111
+    RAM4K(in=in, load=regs0, address=address[0..11], out=out0);
+
+    //Addresses: 01 111 111 111 111 - 01 111 111 111 111
+    RAM4K(in=in, load=regs1, address=address[0..11], out=out1);
+
+    //Addresses: 10 111 111 111 111 - 10 111 111 111 111
+    RAM4K(in=in, load=regs2, address=address[0..11], out=out2);
+
+    //Addresses: 11 111 111 111 111 - 11 111 111 111 111
+    RAM4K(in=in, load=regs3, address=address[0..11], out=out3);
+
+
+    //Now we output the loaded value
+    Mux4Way16(a=out0, b=out1, c=out2, d=out3, sel=address[12..13], out=out);
 }
