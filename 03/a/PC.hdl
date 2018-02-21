@@ -17,4 +17,30 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
+
+    //Implementation: register + combinational logic
+
+    //if      (reset[t] == 1) out[t+1] = 0 SET OUT TO FALSE
+    //else if (load[t] == 1)  out[t+1] = in[t] EQUIVALENT TO 16-BIT REGISTER
+    //else if (inc[t] == 1)   out[t+1] = out[t] + 1  (integer addition) EQUIVALENT TO INC16
+    //else                    out[t+1] = out[t] OUTPUT WHAT'S IN REGISTER
+
+    Inc16(in=regout, out=outplus1); //out[t] + 1
+
+    //These are the if and 2 following else-if statements...
+    //We could try to translate the statements in the order they're in above, but if we do that, the last
+    //else-if would take precedence. We want the order of precedence from lowest to highest be from the bottom
+    //up, so we start with the last else-if statement : else if (inc[t] == 1)
+    Mux16(a=regout, b=outplus1, sel=inc, out=incout); //else if (inc[t] == 1)
+    Mux16(a=incout, b=in, sel=load, out=loadout); //else if(load[t] == 1)
+    Mux16(a=loadout, b=false, sel=reset, out=resetout, out=conditionalout); //if (reset[t] == 1)
+
+    //last else statement...the output out[t+1] = out[t] is taken care of in our first Mux16 as a=regout,
+    //so we should get the changed output, or if no other output is specified, we should get out[t]
+    //Takes the output of the conditional statements and feeds that into the register as the final output
+    Register(in=conditionalout, load=true, out=out, out=regout); //regout = out[t]
+
+
+
+
 }
