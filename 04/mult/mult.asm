@@ -21,39 +21,39 @@
 //R2 = product;
 
 
-//D = RAM[0]
-@R0
-D=M
-//multiplier = RAM[0]
-@multiplier
-M=D
-
-//D = RAM[1]
+//LOAD R1
 @R1
-D=M
-//multiplicand = RAM[1]
-@multiplicand
+D=M //D = RAM[1] (multiplicand and counter for loop)
+@counter
 M=D
 
-//product = 0 (initialize product to 0)
-@product
+//SET R2 TO ZERO
+@R2
 M=0
 
-//set D register to A
-@multiplicand
-D=A
-(Loop)
-    //product += multiplier
-    @multiplier
-    D=A
-    @product
-    MD=M+D
-    @Loop
-    D=D-1;JLE
+(LOOP)
+@counter
+D=M
+@END
+D;JEQ //If counter is not greater than 0, break out of loop
+@1
+D=D-A //decrementing counter
+@counter //and updating the value
+M=D
 
-//RAM[2] = RAM[0] * RAM[1] (RAM[addr] = n)
+//(MULTOP)
+//load R0 (multiplier)
+@R0
+D=M //D = RAM[0]
 @R2
-D=A
+M=M+D
+@LOOP
+0;JMP
+
+//end program
+(END)
+@END
+0;JMP
 
 
 
