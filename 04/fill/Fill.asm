@@ -6,7 +6,7 @@
 // Runs an infinite loop that listens to the keyboard input.
 // When a key is pressed (any key), the program blackens the screen,
 // i.e. writes "black" in every pixel;
-// the screen should remain fully black as long as the key is pressed. 
+// the screen should remain fully black as long as the key is pressed.
 // When no key is pressed, the program clears the screen, i.e. writes
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
@@ -17,6 +17,13 @@
 D=A
 @screenpointer
 M=D
+
+//used to calculate pixel pointer
+@rowcounter //each row has 32 consecutive words
+M=0
+
+@columncounter //each word has 16 bits
+M=0
 
 (INFLOOP) //Infinite reading and checking loop
 //read from keyboard
@@ -32,22 +39,30 @@ M=D
 //make the pixel equal to 0 (white)
 //decrement the screen pointer
 //RAM[memory_address] = 0
-@0
-D=A
+
+//Makes pixel white
 @screenpointer
 A=M
-@A
-M=D
-@16400
-D=A
+M=0
+
+//Error checking
+@SCREEN
+D=M
 @screenpointer
 D=D-M
 @INFLOOP
 D;JEQ
-@16
-D=A
+@SCREEN
+D=M+1
 @screenpointer
-M=M-D
+D=D-M
+@INFLOOP
+D;JEQ
+
+//Decrement pixel pointer
+@screenpointer
+M=M-1
+
 @INFLOOP //go back for updates
 0;JMP
 
@@ -56,22 +71,23 @@ M=M-D
 //make the pixel equal to 1 (black)
 //increment the screen pointer
 //RAM[memory_address] = -1
-@-1
-D=A
+
+//Makes pixel black
 @screenpointer
 A=M
-@A
-M=D
+M=-1
+
+//Error checking
 @131072
 D=A
 @screenpointer
 D=D-M
 @INFLOOP
 D;JEQ
-@16
-D=A
+
+//Increment pixel pointer
 @screenpointer
-M=M+D
+M=M+1
 @INFLOOP //go back for updates
 0;JMP
 
