@@ -77,8 +77,8 @@ M=M-1
 A=M
 M=-1
 
-//Error checking
-@131072
+//Error checking (works for Fill.tst but not FillAutomatic.tst)
+@24576
 D=A
 @screenpointer
 D=D-M
