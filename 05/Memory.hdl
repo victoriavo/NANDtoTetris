@@ -22,10 +22,37 @@
  * Screen and Keyboard chip specifications given in the book.
  */
 
+//Inputs: in and address
+//Control bit: load
+//Layered Memory block:
+//RAM (16K) 0-16383; addresses: ([00]x0000 - [01]1111111111111)2 [13..14]
+//Screen (8K Memory Map) 16384-24575; addresses: ([10]0000000000000 - [10]1111111111111)2 [13..14]
+//Keyboard 24576 address: ([11]0000000000000)2 [13..14]
+//Output: out
+
 CHIP Memory {
     IN in[16], load, address[15];
     OUT out[16];
 
     PARTS:
     // Put your code here:
+
+    //If bits [13..14] = 00 or 01 set RAM16K load bit to load (outs: a and b)
+    //Else if bits [13..14] = 10 set Screen load bit to load (out: c)
+    //Else if bits [13..14] = 11 set Keyboard load bit to load (out: d)
+    DMux4Way(in=load, sel=address[13..14], a=loadrama, b=loadramb, c=loadscreen, d=loadkeyboard);
+    //You can't set the output to the same name so we need an OR to combine the outputs a and b
+    Or(a=loadrama, b=loadramb, out=loadram);
+
+    //Layered memory abstraction: direct input (in and address) to each section
+    //and whether it is accessed or not (load bit)
+    //Review: output of RAM16K and Screen is loaded value or the value stored at the given address
+    //output of the keyboard is just the input it receives
+    RAM16K(in=in, load=loadram, address=address[0..13], out=ramout);
+    Screen(in=in, load=loadscreen, address=address[0..12], out=screenout);
+    Keyboard(out=keyboardout);
+
+    //Now that we've set up each block of memory, we have to decide which one will be the output
+    Mux4Way16(a=ramout, b=ramout, c=screenout, d=keyboardout, sel=address[13..14], out=out);
+
 }
