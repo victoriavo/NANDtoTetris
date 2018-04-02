@@ -40,4 +40,68 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    /**The proposed implementation given in the book and videos say to use:
+     * 2 Mux16s,
+     * ARegister, DRegister
+     * ALU, PC
+     * Each of these parts is directed to by the instruction code:
+     * A Instruction code: 0 v v v  v  v  v  v  v  v  v  v  v  v  v  v
+     * C Instruction code: 1 1 1 a c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
+     * General Instruction: i x x a cccccc ddd jjj
+    */
+
+
+    Not(in=instruction[15], out=noti);
+    //takes instruction and ALU output
+    Mux16(a=instruction, b=aluout, sel=instruction[15], out=mux1out);
+
+    Or(a=noti, b=instruction[5], out=loadareg);
+    //takes input of first Mux16 and control bit
+    ARegister(in=mux1out, load=loadareg, out[0..14]=addressM, out=aregout);
+
+    //d2 (instruction[4])determines whether to store in d
+    And(a=instruction[15], b=instruction[4], out=loaddreg);
+    //takes ALU output and control bit
+    DRegister(in=aluout, load=loaddreg, out=dregout);
+
+    And(a=instruction[15], b=instruction[12], out=am);
+    //takes ARegister and inM, a bit determines whether to take input from register input or the memory input
+    Mux16(a=aregout, b=inM, sel=am, out=mux2out);
+
+    //takes DRegister, the output of the second Mux16, and the control bits
+    //c1=zx, c2=nx, c3=zy, c4=ny, c5=f, c6=no these are instruction[11..6]
+    ALU(x=dregout, y=mux2out,
+        zx=instruction[11], nx=instruction[10], zy=instruction[9],
+        ny=instruction[8], f=instruction[7], no=instruction[6],
+        zr=zr, ng=ng, out=aluout, out=outM);
+
+    //We need to know whether to make a jump to another address or to just increment the counter
+    //Possible jumps: j1 j2 j3
+    //000 - null/no jump
+    //001, 010, 011, 100, 101, 110 conditional jumps
+    //111 unconditional jump
+
+    //set conditions for ALU and branch comparisons
+    Not(in=ng,out=pos);
+    Not(in=zr,out=nzr);
+
+    And(a=instruction[15],b=instruction[0],out=jgt); //C instruction and jump condition
+    And(a=pos,b=nzr,out=posnzr); //comparison is both positive and greater than zero
+    And(a=jgt,b=posnzr,out=ld1); //condition matches the comparison so branch and load the jump address
+
+    And(a=instruction[15],b=instruction[1],out=jeq);
+    And(a=jeq,b=zr,out=ld2); //is the comparison equal to zero? if so, then load the jump address
+
+    And(a=instruction[15],b=instruction[2],out=jlt);
+    And(a=jlt,b=ng,out=ld3); //if the comparison is less than zero, load the jump address
+
+    Or(a=ld1,b=ld2,out=ldt); //if either of the conditional jumps is signified, load the jump address in the pc
+    Or(a=ld3,b=ldt,out=ld);
+
+    PC(in=aregout,load=ld,inc=true,reset=reset,out[0..14]=pc);
+
+    //d3 (instruction[3]) determines whether to store in ARegister
+    And(a=instruction[15], b=instruction[3], out=writeM);
+
+
 }
