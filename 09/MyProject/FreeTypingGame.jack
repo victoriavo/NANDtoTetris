@@ -13,6 +13,8 @@
 
 class FreeTypingGame {
     field int score;
+    field int key;
+    field String sentence;
    //constructs a new Free Typing Game
     constructor FreeTypingGame new() {
         let score = 0;
@@ -20,8 +22,10 @@ class FreeTypingGame {
     }
 
     method void uploadStory() {
-//sets up typing story on the screen
-//do uploadStory();
+        do Screen.clearScreen();
+        //sets up typing story on the screen
+        do Output.printString(sentence);
+        return;
     }
 
     method void dispose() {
@@ -29,25 +33,70 @@ class FreeTypingGame {
         return;
     }
 
-    method int calculateScore()
-    {
-        //if the key that the
-    }
 
-    method string pickASentence()
+
+    method String pickASentence()
     {
+        var String s1, s2, s3;
+        var Array strings;
+        var int selected;
+
         //42 characters The quick brown fox jumps over a lazy dog.
-        field String string1;
-        let string1 = "The quick brown fox jumps over a lazy dog.";
+        let s1 = "The quick brown fox jumps over a lazy dog.";
 
         //40 Pack my box with five dozen liquor jugs.
-        field String string2;
-        let string2 = "Pack my box with five dozen liquor jugs.";
+        let s2 = "Pack my box with five dozen liquor jugs.";
 
         //36 How quickly daft jumping zebras vex.
-        field String string3;
-        let string3 = "How quickly daft jumping zebras vex.";
+        let s3 = "How quickly daft jumping zebras vex.";
 
-        let Array strings = [string1, string2, string3];
+        let strings = Array.new(3);
+        let strings[0] = s1;
+        let strings[1] = s2;
+        let strings[2] = s3;
+
+        let selected = 0;
+
+        //if(key >= 32 || key <= 63){ let selected = 0; }
+        //if(key >= 64 || key <= 95){ let selected = 1; }
+        //if(key >= 96 || key <= 126){ let selected = 2; }
+
+        if(key > 32){ let selected = 0; }
+        if(key = 32){ let selected = 0; }
+        if(key < 63){ let selected = 0; }
+        if(key = 63){ let selected = 0; }
+
+        if(key > 64){ let selected = 1; }
+        if(key = 64){ let selected = 1; }
+        if(key < 95){ let selected = 1; }
+        if(key = 95){ let selected = 1; }
+
+        if(key > 96){ let selected = 2; }
+        if(key = 96){ let selected = 2; }
+        if(key < 126){ let selected = 2; }
+        if(key = 126){ let selected = 2; }
+
+
+        return strings[selected];
+    }
+
+
+
+    method void run() {
+        //var char key;  // the key currently pressed by the user
+        //var String sentence;
+        var boolean exit;
+        let exit = false;
+
+        while (~exit) {
+            // waits for a key to be pressed
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+                let sentence = pickASentence();
+                do uploadStory();
+            }
+
+        } // while
+        return;
     }
 }

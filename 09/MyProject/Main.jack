@@ -12,9 +12,9 @@ class Main {
       do Output.printString("       Welcome to Victoria's Typing Game. Let's Type!");
       do Output.println();
       do Output.printString("              Press any key to get started.");
-      var FreeTypingGame game;
+      //var FreeTypingGame game;
       //if key is pressed
-      do game.run();
+      //do game.run();
       return;
    }
 }
