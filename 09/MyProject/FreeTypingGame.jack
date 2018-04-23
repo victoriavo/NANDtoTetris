@@ -18,11 +18,12 @@ class FreeTypingGame {
    //constructs a new Free Typing Game
     constructor FreeTypingGame new() {
         let score = 0;
+        let key = 0;
         return this;
     }
 
     method void uploadStory() {
-        do Screen.clearScreen();
+        //do Screen.clearScreen();
         //sets up typing story on the screen
         do Output.printString(sentence);
         return;
@@ -76,6 +77,7 @@ class FreeTypingGame {
         if(key < 126){ let selected = 2; }
         if(key = 126){ let selected = 2; }
 
+        do uploadStory();
 
         return strings[selected];
     }
@@ -88,12 +90,23 @@ class FreeTypingGame {
         var boolean exit;
         let exit = false;
 
-        while (~exit) {
+        while (true) {
             // waits for a key to be pressed
             while (key = 0) {
+                do Output.println();
+                do Output.printString("Running");
+
+                do Screen.clearScreen();
+
                 let key = Keyboard.keyPressed();
-                let sentence = pickASentence();
-                do uploadStory();
+                do Output.println();
+                do Output.printString(key);
+                //let sentence = pickASentence();
+            }
+
+            // waits for the key to be released
+            while (~(key = 0)) {
+                let key = Keyboard.keyPressed();
             }
 
         } // while

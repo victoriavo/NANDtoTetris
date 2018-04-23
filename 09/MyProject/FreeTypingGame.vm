@@ -4,13 +4,13 @@ call Memory.alloc 1
 pop pointer 0
 push constant 0
 pop this 0
+push constant 0
+pop this 1
 push pointer 0
 return
 function FreeTypingGame.uploadStory 0
 push argument 0
 pop pointer 0
-call Screen.clearScreen 0
-pop temp 0
 push this 2
 call Output.printString 1
 pop temp 0
@@ -409,6 +409,9 @@ label IF_TRUE11
 push constant 2
 pop local 4
 label IF_FALSE11
+push pointer 0
+call FreeTypingGame.uploadStory 1
+pop temp 0
 push local 4
 push local 3
 add
@@ -421,7 +424,7 @@ pop pointer 0
 push constant 0
 pop local 0
 label WHILE_EXP0
-push local 0
+push constant 0
 not
 not
 if-goto WHILE_END0
@@ -431,16 +434,48 @@ push constant 0
 eq
 not
 if-goto WHILE_END1
+call Output.println 0
+pop temp 0
+push constant 7
+call String.new 1
+push constant 82
+call String.appendChar 2
+push constant 117
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 103
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+call Screen.clearScreen 0
+pop temp 0
 call Keyboard.keyPressed 0
 pop this 1
-push pointer 0
-call FreeTypingGame.pickASentence 1
-pop this 2
-push pointer 0
-call FreeTypingGame.uploadStory 1
+call Output.println 0
+pop temp 0
+push this 1
+call Output.printString 1
 pop temp 0
 goto WHILE_EXP1
 label WHILE_END1
+label WHILE_EXP2
+push this 1
+push constant 0
+eq
+not
+not
+if-goto WHILE_END2
+call Keyboard.keyPressed 0
+pop this 1
+goto WHILE_EXP2
+label WHILE_END2
 goto WHILE_EXP0
 label WHILE_END0
 push constant 0
