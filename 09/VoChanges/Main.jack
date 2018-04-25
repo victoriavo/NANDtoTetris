@@ -1,0 +1,76 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/09/MyProject/Main.jack
+
+/** Hello World program. */
+class Main {
+   function void main() {
+       var FreeTypingGame game;
+       var int key;
+// I think you need a constructor call in here too.  This is
+// likely what was causing your memroy errors.  You were calling
+// the run method without having called th constructor on the object.
+
+      let game = FreeTypingGame.new();
+      ///* Prints some text using the standard library. */
+      //do Output.printString("Hello world!");
+      //do Output.println();      // New line
+      do Output.printString("       Welcome to Victoria's Typing Game. Let's Type!");
+      do Output.println();
+      do Output.printString("              Press any key to get started.");
+//
+// Hi Victoria,  I commented out some of your code and wrote
+// some more in the (hopefully) help
+//
+//      //if key is pressed
+//      let key = Keyboard.readChar();
+//
+// The stuff above probably needs to be in a loop, like the 
+// one immediately below this comment:
+// It continually reads the keyboard space until key not= 0;
+// Also I would use keyPressed() instead of readChar() - see
+// Jack OS API file on Canvas or in book for clear explanations
+
+    let key = 0;
+    while (key = 0) {
+      let key = Keyboard.keyPressed();
+    }
+
+//      if (~(key = 0)){
+//        do Screen.clearScreen();
+//        do Output.println();
+//        do Output.printString("                         Ready...");
+//        do Output.println();
+//        do Output.printString("                             3...");
+//        do Output.println();
+//        do Output.printString("                             2...");
+//        do Output.println();
+//        do Output.printString("                             1...");
+//        do game.run(key);
+//        do game.dispose();
+//
+//  Then I think its best to drop the if-then conditional in the
+//  code above and just execute from there.  Like this:
+
+        do Screen.clearScreen();
+        do Output.println();
+        do Output.printString("                         Ready...");
+        do Output.println();
+        do Output.printString("                             3...");
+        do Output.println();
+        do Output.printString("                             2...");
+        do Output.println();
+        do Output.printString("                             1...");
+        do game.run(key);
+        do game.dispose();
+
+//  That code will wait for a key then open the game.run() method, 
+//  after a key i pressed, passing in the value for the 
+//  key pressed on the opening screen.
+
+  //    }
+      return;
+   }
+}
+

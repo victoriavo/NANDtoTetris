@@ -15,8 +15,9 @@ class FreeTypingGame {
     field int score;
     field int key;
     field String sentence;
-
    //constructs a new Free Typing Game
+
+// constructor looks good - DGS
     constructor FreeTypingGame new() {
         let score = 0;
         let key = 0;
@@ -25,25 +26,9 @@ class FreeTypingGame {
     }
 
     method void uploadStory() {
-        do Output.moveCursor(0,0);
-        do Screen.clearScreen();
+        //do Screen.clearScreen();
         //sets up typing story on the screen
         do Output.printString(sentence);
-        do typeCheck();
-        return;
-    }
-
-    method void typeCheck(){
-        var int quit;
-        let quit = 0;
-        do Screen.drawRectangle(0,15,5,25);
-        do Output.moveCursor(3,0);
-        do Output.printString("Currently typing: ");
-        while(~quit)
-        {
-            do Keyboard.readChar();
-            do String.eraseLastChar();
-        }
         return;
     }
 
@@ -52,7 +37,9 @@ class FreeTypingGame {
         return;
     }
 
-    method void pickASentence()
+
+
+    method String pickASentence()
     {
         var String s1, s2, s3;
         var Array strings;
@@ -74,6 +61,10 @@ class FreeTypingGame {
 
         let selected = 0;
 
+        //if(key >= 32 || key <= 63){ let selected = 0; }
+        //if(key >= 64 || key <= 95){ let selected = 1; }
+        //if(key >= 96 || key <= 126){ let selected = 2; }
+
         if(key > 32){ let selected = 0; }
         if(key = 32){ let selected = 0; }
         if(key < 63){ let selected = 0; }
@@ -89,20 +80,24 @@ class FreeTypingGame {
         if(key < 126){ let selected = 2; }
         if(key = 126){ let selected = 2; }
 
-        let sentence = strings[selected];
-        return;
+        return strings[selected];
     }
 
     method void run(int gamekey) {
+//  If you want more user input from here, you will probably need another
+//  loop to get input from keyboard like the one in main
+//  You would call your other methods from inside this method, I suppose.
+
         do Output.println();
-        //do Output.printString("gamekey:");
-        //do Output.printInt(gamekey);
-        //let key = gamekey;
-        //do Output.println();
-        //do Output.printString("key:");
-        //do Output.printInt(key);
-        do pickASentence();
-        do uploadStory();
+        do Output.printString("gamekey:");
+        do Output.printInt(gamekey);
+        let key = gamekey;
+        do Output.println();
+        do Output.printString("key:");
+        do Output.printInt(key);
+        //do Screen.clearScreen();
+        //let sentence = pickASentence();
+        //do uploadStory();
         return;
     }
 }
