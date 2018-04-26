@@ -33,16 +33,76 @@ class FreeTypingGame {
         return;
     }
 
+    method void mvSentCursor(int x1, int y1, int x2, int y2){
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x1, y1, x2, y2);
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x1+8, y1, x2+8, y2);
+        return;
+    }
+
+    method bool typedRight(int cursor, char userTyped){
+        var char cursorChar;
+        let cursorChar = sentence.charAt(cursor);
+
+        if (cursorChar = userTyped)
+        {
+            return true;
+        }
+        return false;
+    }
+
     method void typeCheck(){
         var int quit;
+        var int keyPressed;
+        var int cursor;
+        var int stopCond;
+        var int x1, y1, x2, y2;
+        let x1 = 0;
+        let y1 = 15;
+        let x2 = 5;
+        let y2 = 25;
         let quit = 0;
-        do Screen.drawRectangle(0,15,5,25);
+        let cursor = 0;
+        let stopCond = sentence.length() - 1;
+
+        do Screen.drawRectangle(x1,y1,x2,y2);
         do Output.moveCursor(3,0);
         do Output.printString("Currently typing: ");
-        while(~quit)
+
+        while(quit = 0)
         {
-            do Keyboard.readChar();
-            do String.eraseLastChar();
+            let keyPressed = Keyboard.keyPressed();
+            if (~(keyPressed = 0))
+            {
+                do Output.moveCursor(3,18);
+                if (keyPressed = 32)
+                {
+                    do Output.printChar("_");
+                }
+                else
+                {
+                    do Output.printChar(keyPressed);
+                }
+            }
+            //if character in sentence matches the character that the user typed, move cursor
+            //calculate score
+            while(typedRight(cursor, keyPressed) = true)
+            {
+                if(~(cursor = stopCond))
+                {
+                    do mvSentCursor(x1, y1, x2, y2);
+                    let x1 = x1 + 8;
+                    let x2 = x2 + 8;
+                    let cursor = cursor + 1;
+
+                }
+                else
+                {
+                     let quit = 1;
+                }
+            }
+
         }
         return;
     }
@@ -59,13 +119,14 @@ class FreeTypingGame {
         var int selected;
 
         //42 characters The quick brown fox jumps over a lazy dog.
-        let s1 = "The quick brown fox jumps over a lazy dog.";
+        let s1 = "THE QUICK BROWN FOX JUMPS OVER A LAZY DOG";
 
         //40 Pack my box with five dozen liquor jugs.
-        let s2 = "Pack my box with five dozen liquor jugs.";
+        let s2 = "PACK MY BOX WITH FIVE DOZEN LIQUOR JUGS";
 
         //36 How quickly daft jumping zebras vex.
-        let s3 = "How quickly daft jumping zebras vex.";
+        let s3 = "HOW QUICKLY DAFT JUMPING ZEBRAS VEX";
+
 
         let strings = Array.new(3);
         let strings[0] = s1;
@@ -74,20 +135,20 @@ class FreeTypingGame {
 
         let selected = 0;
 
-        if(key > 32){ let selected = 0; }
-        if(key = 32){ let selected = 0; }
-        if(key < 63){ let selected = 0; }
-        if(key = 63){ let selected = 0; }
+        if(key > 65){ let selected = 0; }
+        if(key = 65){ let selected = 0; }
+        if(key < 72){ let selected = 0; }
+        if(key = 72){ let selected = 0; }
 
-        if(key > 64){ let selected = 1; }
-        if(key = 64){ let selected = 1; }
-        if(key < 95){ let selected = 1; }
-        if(key = 95){ let selected = 1; }
+        if(key > 73){ let selected = 1; }
+        if(key = 73){ let selected = 1; }
+        if(key < 80){ let selected = 1; }
+        if(key = 80){ let selected = 1; }
 
-        if(key > 96){ let selected = 2; }
-        if(key = 96){ let selected = 2; }
-        if(key < 126){ let selected = 2; }
-        if(key = 126){ let selected = 2; }
+        if(key > 81){ let selected = 2; }
+        if(key = 81){ let selected = 2; }
+        if(key < 90){ let selected = 2; }
+        if(key = 90){ let selected = 2; }
 
         let sentence = strings[selected];
         return;
@@ -95,12 +156,6 @@ class FreeTypingGame {
 
     method void run(int gamekey) {
         do Output.println();
-        //do Output.printString("gamekey:");
-        //do Output.printInt(gamekey);
-        //let key = gamekey;
-        //do Output.println();
-        //do Output.printString("key:");
-        //do Output.printInt(key);
         do pickASentence();
         do uploadStory();
         return;

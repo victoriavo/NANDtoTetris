@@ -291,7 +291,7 @@ push constant 33
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
-push constant 10000
+push constant 8000
 call Sys.wait 1
 pop temp 0
 call Output.println 0
@@ -372,7 +372,7 @@ call Output.printString 1
 pop temp 0
 call Output.println 0
 pop temp 0
-push constant 1500
+push constant 1000
 call Sys.wait 1
 pop temp 0
 push constant 33
@@ -447,7 +447,7 @@ call Output.printString 1
 pop temp 0
 call Output.println 0
 pop temp 0
-push constant 1500
+push constant 1000
 call Sys.wait 1
 pop temp 0
 push constant 33
@@ -522,7 +522,7 @@ call Output.printString 1
 pop temp 0
 call Output.println 0
 pop temp 0
-push constant 1500
+push constant 1000
 call Sys.wait 1
 pop temp 0
 push constant 33
@@ -595,7 +595,7 @@ push constant 46
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
-push constant 1500
+push constant 1000
 call Sys.wait 1
 pop temp 0
 push local 0
