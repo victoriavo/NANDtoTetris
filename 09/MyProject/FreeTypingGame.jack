@@ -15,12 +15,17 @@ class FreeTypingGame {
     field int score;
     field int key;
     field String sentence;
+    field int typingErrors;
+    field int typingCorrect;
+    field int typingLength;
 
    //constructs a new Free Typing Game
     constructor FreeTypingGame new() {
         let score = 0;
         let key = 0;
         let sentence = " ";
+        let typingErrors = 0;
+        let typingLength = 0;
         return this;
     }
 
@@ -47,9 +52,51 @@ class FreeTypingGame {
 
         if (cursorChar = userTyped)
         {
+            let typingCorrect = typingCorrect + 1;
             return true;
         }
+
+        if (~(cursorChar = userTyped))
+        {
+            if(~(userTyped = 0))
+            {
+                let typingErrors = typingErrors + 1;
+            }
+        }
+
         return false;
+    }
+
+    method void calculateScore()
+    {
+        var int percentage;
+        do Output.println();
+        do Output.printInt(typingCorrect);
+        do Output.println();
+        do Output.printInt(typingErrors);
+        do Sys.wait(10000);
+        //let percentage = Math.multiply((1 - Math.divide(typingErrors,typingCorrect)), 100);
+        do Output.printInt(percentage);
+        //return typingErrors;
+        return;
+    }
+
+    method void endStory(){
+        do Sys.wait(1500);
+        do Screen.clearScreen();
+        do Output.moveCursor(0,20);
+        do Output.printString("Thanks for playing!");
+        do Output.println();
+        do Output.println();
+        do Output.printString("Calculating score...");
+        do Sys.wait(5000);
+
+        do Output.moveCursor(10,0);
+        do Output.printString("Score: ");
+        do Output.printInt(typingErrors);
+        do Output.printString("%");
+
+        return;
     }
 
     method void typeCheck(){
@@ -64,7 +111,9 @@ class FreeTypingGame {
         let y2 = 25;
         let quit = 0;
         let cursor = 0;
-        let stopCond = sentence.length() - 1;
+        let stopCond = typingLength - 1;
+        do Output.printInt(typingErrors);
+        do Sys.wait(1000);
 
         do Screen.drawRectangle(x1,y1,x2,y2);
         do Output.moveCursor(3,0);
@@ -89,6 +138,16 @@ class FreeTypingGame {
             //calculate score
             while(typedRight(cursor, keyPressed) = true)
             {
+                if(cursor = stopCond)
+                {
+                    //do Output.printString(score);
+                    do calculateScore();
+                    //let score = calculateScore();
+                    let quit = 1;
+                    do endStory();
+                    return;
+                }
+
                 if(~(cursor = stopCond))
                 {
                     do mvSentCursor(x1, y1, x2, y2);
@@ -97,12 +156,7 @@ class FreeTypingGame {
                     let cursor = cursor + 1;
 
                 }
-                else
-                {
-                     let quit = 1;
-                }
             }
-
         }
         return;
     }
@@ -151,6 +205,8 @@ class FreeTypingGame {
         if(key = 90){ let selected = 2; }
 
         let sentence = strings[selected];
+        let typingLength = sentence.length();
+
         return;
     }
 
