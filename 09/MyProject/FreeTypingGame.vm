@@ -1,5 +1,5 @@
 function FreeTypingGame.new 0
-push constant 6
+push constant 5
 call Memory.alloc 1
 pop pointer 0
 push constant 0
@@ -14,7 +14,7 @@ pop this 2
 push constant 0
 pop this 3
 push constant 0
-pop this 5
+pop this 4
 push pointer 0
 return
 function FreeTypingGame.uploadStory 0
@@ -75,10 +75,6 @@ eq
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
-push this 4
-push constant 1
-add
-pop this 4
 push constant 0
 not
 return
@@ -108,23 +104,15 @@ return
 function FreeTypingGame.calculateScore 1
 push argument 0
 pop pointer 0
-call Output.println 0
-pop temp 0
-push this 4
-call Output.printInt 1
-pop temp 0
-call Output.println 0
-pop temp 0
-push this 3
-call Output.printInt 1
-pop temp 0
 push constant 10000
-call Sys.wait 1
-pop temp 0
+push this 3
+sub
+pop local 0
 push local 0
-call Output.printInt 1
-pop temp 0
-push constant 0
+push constant 100
+call Math.divide 2
+pop local 0
+push local 0
 return
 function FreeTypingGame.endStory 0
 push argument 0
@@ -231,9 +219,7 @@ pop temp 0
 push constant 5000
 call Sys.wait 1
 pop temp 0
-push constant 10
-push constant 0
-call Output.moveCursor 2
+call Output.println 0
 pop temp 0
 push constant 7
 call String.new 1
@@ -253,7 +239,7 @@ push constant 32
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
-push this 3
+push this 0
 call Output.printInt 1
 pop temp 0
 push constant 1
@@ -279,16 +265,10 @@ push constant 0
 pop local 0
 push constant 0
 pop local 2
-push this 5
+push this 4
 push constant 1
 sub
 pop local 3
-push this 3
-call Output.printInt 1
-pop temp 0
-push constant 1000
-call Sys.wait 1
-pop temp 0
 push local 4
 push local 5
 push local 6
@@ -396,6 +376,9 @@ label IF_TRUE2
 push pointer 0
 call FreeTypingGame.calculateScore 1
 pop temp 0
+push pointer 0
+call FreeTypingGame.calculateScore 1
+pop this 0
 push constant 1
 pop local 0
 push pointer 0
@@ -719,6 +702,18 @@ pop local 4
 push this 1
 push constant 65
 gt
+push this 1
+push constant 65
+eq
+or
+push this 1
+push constant 72
+lt
+push this 1
+push constant 72
+eq
+or
+and
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
@@ -726,104 +721,47 @@ push constant 0
 pop local 4
 label IF_FALSE0
 push this 1
-push constant 65
+push constant 73
+gt
+push this 1
+push constant 73
 eq
+or
+push this 1
+push constant 80
+lt
+push this 1
+push constant 80
+eq
+or
+and
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
-push constant 0
+push constant 1
 pop local 4
 label IF_FALSE1
 push this 1
-push constant 72
+push constant 81
+gt
+push this 1
+push constant 81
+eq
+or
+push this 1
+push constant 90
 lt
+push this 1
+push constant 90
+eq
+or
+and
 if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
-push constant 0
+push constant 2
 pop local 4
 label IF_FALSE2
-push this 1
-push constant 72
-eq
-if-goto IF_TRUE3
-goto IF_FALSE3
-label IF_TRUE3
-push constant 0
-pop local 4
-label IF_FALSE3
-push this 1
-push constant 73
-gt
-if-goto IF_TRUE4
-goto IF_FALSE4
-label IF_TRUE4
-push constant 1
-pop local 4
-label IF_FALSE4
-push this 1
-push constant 73
-eq
-if-goto IF_TRUE5
-goto IF_FALSE5
-label IF_TRUE5
-push constant 1
-pop local 4
-label IF_FALSE5
-push this 1
-push constant 80
-lt
-if-goto IF_TRUE6
-goto IF_FALSE6
-label IF_TRUE6
-push constant 1
-pop local 4
-label IF_FALSE6
-push this 1
-push constant 80
-eq
-if-goto IF_TRUE7
-goto IF_FALSE7
-label IF_TRUE7
-push constant 1
-pop local 4
-label IF_FALSE7
-push this 1
-push constant 81
-gt
-if-goto IF_TRUE8
-goto IF_FALSE8
-label IF_TRUE8
-push constant 2
-pop local 4
-label IF_FALSE8
-push this 1
-push constant 81
-eq
-if-goto IF_TRUE9
-goto IF_FALSE9
-label IF_TRUE9
-push constant 2
-pop local 4
-label IF_FALSE9
-push this 1
-push constant 90
-lt
-if-goto IF_TRUE10
-goto IF_FALSE10
-label IF_TRUE10
-push constant 2
-pop local 4
-label IF_FALSE10
-push this 1
-push constant 90
-eq
-if-goto IF_TRUE11
-goto IF_FALSE11
-label IF_TRUE11
-push constant 2
-pop local 4
-label IF_FALSE11
 push local 4
 push local 3
 add
@@ -832,14 +770,14 @@ push that 0
 pop this 2
 push this 2
 call String.length 1
-pop this 5
+pop this 4
 push constant 0
 return
 function FreeTypingGame.run 0
 push argument 0
 pop pointer 0
-call Output.println 0
-pop temp 0
+push argument 1
+pop this 1
 push pointer 0
 call FreeTypingGame.pickASentence 1
 pop temp 0

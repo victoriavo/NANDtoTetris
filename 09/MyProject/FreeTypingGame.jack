@@ -1,25 +1,22 @@
 // File name: projects/09/MyProject/FreeTypingGame.jack
+// Creator: Victoria Vo
 
 /**
-* Implements the Square Dance game.
-* This simple game allows the user to move a black square around
-* the screen, and change the square's size during the movement.
-* When the game starts, a square of 30 by 30 pixels is shown at the
-* top-left corner of the screen. The user controls the square as follows.
-* The 4 arrow keys are used to move the square up, down, left, and right.
-* The 'z' and 'x' keys are used, respectively, to decrement and increment
-* the square's size. The 'q' key is used to quit the game.
+* Implements a typing game based off of free typing games that can be found online.
+* This simple game uploads a sentence for the character to type out.
+* They are given various sentences based on the key they press at the start of the game.
+* After typing out the sentence, the user is given a score based on the number of errors
+* they made and the time it took them to correct their errors.
 */
 
 class FreeTypingGame {
-    field int score;
-    field int key;
-    field String sentence;
-    field int typingErrors;
-    field int typingCorrect;
-    field int typingLength;
+    field int score; //overall game score
+    field int key; //key that is currently pressed by user
+    field String sentence; //typing sentence uploaded for game
+    field int typingErrors; //non-matches in typing game
+    field int typingLength; //number of characters in the game sentence
 
-   //constructs a new Free Typing Game
+    //constructs a new Free Typing Game; initialize everything to zero or null
     constructor FreeTypingGame new() {
         let score = 0;
         let key = 0;
@@ -29,33 +26,49 @@ class FreeTypingGame {
         return this;
     }
 
+    //Sets up the playing field of the game by uploading the sentence
     method void uploadStory() {
+        //clean slate, get rid of previous instructions
         do Output.moveCursor(0,0);
         do Screen.clearScreen();
+
         //sets up typing story on the screen
         do Output.printString(sentence);
+
+        //actually starts the playing part of the game which is typing
+        //  and making sure it matches the sentence string
         do typeCheck();
+
         return;
     }
 
+    //Moves the 'cursor' or position indicator of which character the user is at
+    //Method effectively moves the cursor one character to the right each time it's called
     method void mvSentCursor(int x1, int y1, int x2, int y2){
+        //erases previous cursor
         do Screen.setColor(false);
         do Screen.drawRectangle(x1, y1, x2, y2);
+
+        //draws new cursor
         do Screen.setColor(true);
         do Screen.drawRectangle(x1+8, y1, x2+8, y2);
+
         return;
     }
 
+    //Checks if the current character in the sentence matches the user's input
     method bool typedRight(int cursor, char userTyped){
+        //current character in the sentence, set it to where cursor is at
         var char cursorChar;
         let cursorChar = sentence.charAt(cursor);
 
+        //There is a match, return true
         if (cursorChar = userTyped)
         {
-            let typingCorrect = typingCorrect + 1;
             return true;
         }
 
+        //Not a match, return false and increment the # of errors by 1
         if (~(cursorChar = userTyped))
         {
             if(~(userTyped = 0))
@@ -67,20 +80,21 @@ class FreeTypingGame {
         return false;
     }
 
-    method void calculateScore()
+    //Calculates the user score based off the number of typing errors they made
+    method int calculateScore()
     {
-        var int percentage;
-        do Output.println();
-        do Output.printInt(typingCorrect);
-        do Output.println();
-        do Output.printInt(typingErrors);
-        do Sys.wait(10000);
-        //let percentage = Math.multiply((1 - Math.divide(typingErrors,typingCorrect)), 100);
-        do Output.printInt(percentage);
-        //return typingErrors;
-        return;
+        var int percentage; //user's score out of 100%
+        //The errors were in the thousands and 1000 at my fastest typing pace
+        //I found it best to subtract this from 10000, so that 1000 typing errors
+        //would have a 90% score
+        let percentage = 10000 - typingErrors;
+        //divide the score by 100 to get it on the hundred scale
+        let percentage = Math.divide(percentage,100);
+
+        return percentage;
     }
 
+    //Game has finished; this presents the score and an end message for the player
     method void endStory(){
         do Sys.wait(1500);
         do Screen.clearScreen();
@@ -91,39 +105,50 @@ class FreeTypingGame {
         do Output.printString("Calculating score...");
         do Sys.wait(5000);
 
-        do Output.moveCursor(10,0);
+        do Output.println();
         do Output.printString("Score: ");
-        do Output.printInt(typingErrors);
+        do Output.printInt(score);
         do Output.printString("%");
 
         return;
     }
 
+    //The actual "game section" of this program
+    //Collects user input and implements whether the user moves further in the game or not
+    //Also executes the general procedure/process of the game
     method void typeCheck(){
-        var int quit;
-        var int keyPressed;
-        var int cursor;
-        var int stopCond;
-        var int x1, y1, x2, y2;
+        var int quit; //game over?
+        var int keyPressed; //user input
+        var int cursor; //sentence position
+        var int stopCond; //when to set quit to 1
+        var int x1, y1, x2, y2; //position on screen (for cursor)
+
+        //initial cursor position settings
         let x1 = 0;
         let y1 = 15;
         let x2 = 5;
         let y2 = 25;
+
+        //inital game condition settings
         let quit = 0;
         let cursor = 0;
         let stopCond = typingLength - 1;
-        do Output.printInt(typingErrors);
-        do Sys.wait(1000);
 
+        //Create starting cursor and game details
         do Screen.drawRectangle(x1,y1,x2,y2);
         do Output.moveCursor(3,0);
         do Output.printString("Currently typing: ");
 
+        //Keep doing until the user has reached the end of the game
         while(quit = 0)
         {
+            //get user input from keyboard
             let keyPressed = Keyboard.keyPressed();
+
+            //A key is being pressed
             if (~(keyPressed = 0))
             {
+                //show the user what key they pressed
                 do Output.moveCursor(3,18);
                 if (keyPressed = 32)
                 {
@@ -134,53 +159,48 @@ class FreeTypingGame {
                     do Output.printChar(keyPressed);
                 }
             }
+
             //if character in sentence matches the character that the user typed, move cursor
             //calculate score
-            while(typedRight(cursor, keyPressed) = true)
+            while(typedRight(cursor, keyPressed) = true) //user types correctly
             {
-                if(cursor = stopCond)
+                if(cursor = stopCond) //user reached the end of sentence
                 {
-                    //do Output.printString(score);
                     do calculateScore();
-                    //let score = calculateScore();
-                    let quit = 1;
-                    do endStory();
+                    let score = calculateScore();
+                    let quit = 1; //set condition so game can end
+                    do endStory(); //show end message
                     return;
                 }
 
-                if(~(cursor = stopCond))
+                if(~(cursor = stopCond)) //keep going if not at the end of the sentence yet
                 {
-                    do mvSentCursor(x1, y1, x2, y2);
+                    do mvSentCursor(x1, y1, x2, y2); //move cursor position one spot to the right
                     let x1 = x1 + 8;
                     let x2 = x2 + 8;
-                    let cursor = cursor + 1;
-
+                    let cursor = cursor + 1; //increment index of sentence character position
                 }
             }
         }
         return;
     }
 
+    //Free memory of FreeTypingGame object
     method void dispose() {
         do Memory.deAlloc(this);
         return;
     }
 
+    //Varies the sentence that the user is given based on which key they press at the start menu
     method void pickASentence()
     {
         var String s1, s2, s3;
         var Array strings;
         var int selected;
 
-        //42 characters The quick brown fox jumps over a lazy dog.
         let s1 = "THE QUICK BROWN FOX JUMPS OVER A LAZY DOG";
-
-        //40 Pack my box with five dozen liquor jugs.
         let s2 = "PACK MY BOX WITH FIVE DOZEN LIQUOR JUGS";
-
-        //36 How quickly daft jumping zebras vex.
         let s3 = "HOW QUICKLY DAFT JUMPING ZEBRAS VEX";
-
 
         let strings = Array.new(3);
         let strings[0] = s1;
@@ -189,20 +209,9 @@ class FreeTypingGame {
 
         let selected = 0;
 
-        if(key > 65){ let selected = 0; }
-        if(key = 65){ let selected = 0; }
-        if(key < 72){ let selected = 0; }
-        if(key = 72){ let selected = 0; }
-
-        if(key > 73){ let selected = 1; }
-        if(key = 73){ let selected = 1; }
-        if(key < 80){ let selected = 1; }
-        if(key = 80){ let selected = 1; }
-
-        if(key > 81){ let selected = 2; }
-        if(key = 81){ let selected = 2; }
-        if(key < 90){ let selected = 2; }
-        if(key = 90){ let selected = 2; }
+        if(((key > 65) | (key = 65)) & ((key < 72) | (key = 72))){ let selected = 0; }
+        if(((key > 73) | (key = 73)) & ((key < 80) | (key = 80))){ let selected = 1; }
+        if(((key > 81) | (key = 81)) & ((key < 90) | (key = 90))){ let selected = 2; }
 
         let sentence = strings[selected];
         let typingLength = sentence.length();
@@ -210,8 +219,9 @@ class FreeTypingGame {
         return;
     }
 
+    //Runs and executes the game process
     method void run(int gamekey) {
-        do Output.println();
+        let key = gamekey;
         do pickASentence();
         do uploadStory();
         return;
