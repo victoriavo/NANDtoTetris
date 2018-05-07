@@ -38,7 +38,6 @@ using namespace std;
 
 int main(int argc, char* const argv[])
 {
-    cout << "Hello World";
     //1. Parse the assembly file that is read in.
     Parser parser;
     parser.readInputFile(argv[1]);

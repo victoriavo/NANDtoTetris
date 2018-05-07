@@ -8,7 +8,20 @@ void Parser::readInputFile(char* inputFile)
     {
         while ( getline (myfile, line) )
         {
-            cout << line << '\n';
+            if((line[0] != '/') && (line[1] != '/') && (line.length() != 1)) //removes single line comments and blank lines
+            {
+                    cout << line << '\n';
+            }
+            //after finding start symbol, don't print until you find the end symbol
+            if ((line[0] == '/') && (line[1] == '*')) //handles multiline (paragraph) comments
+            {
+                getline (myfile, line);
+                while((line[line.length()-2] != '*') && (line[line.length()-1] != '/')
+                      && (getline (myfile, line)))
+                {
+                        cout << "";
+                }
+            }
         }
         myfile.close();
     }
