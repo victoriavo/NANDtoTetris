@@ -19,7 +19,15 @@ hello.sayHi
 
 #end
 
-#initializing Ruby Program
-BEGIN {
-    
-}
+class Main
+    def initialization()
+    end
+
+    def firstPass()
+    end
+
+    def secondPass()
+    end
+end
+
+initialization (param)
