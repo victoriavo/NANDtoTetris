@@ -11,8 +11,8 @@ class Parser
 {
 public:
     void readInputFile(char*);
-    String removeFileExtension(String&);
-    void writeOutputFile(String&);
+    string removeFileExtension(string&);
+    //void writeOutputFile(String&);
 };
 
 #endif //   PARSER

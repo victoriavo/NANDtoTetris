@@ -4,7 +4,7 @@ void Parser::readInputFile(char* inputFile)
 {
     string line;
     ifstream myfile (inputFile);
-    if(inputFile.is_open())
+    if(myfile.is_open())
     {
         while ( getline (myfile, line) )
         {
@@ -14,18 +14,19 @@ void Parser::readInputFile(char* inputFile)
     }
     else cout << "Unable to open file";
     
-    return 0;
+    return;
 }
 
-String Parser::removeFileExtension(String& fileName)
+string Parser::removeFileExtension(string& inputFileName)
 {
-    string fileName = fileName;
+    string fileName = inputFileName;
     string fileNameWithoutExtension = fileName.substr(0, fileName.rfind("."));
     
     return(fileNameWithoutExtension);
 }
 
 //will write binary code
+/*
 void Parser::writeOutputFile(String& fileNameWithoutExtension)
 {
     ofstream myfile (fileNameWithoutExtension + ".hack");
@@ -38,3 +39,4 @@ void Parser::writeOutputFile(String& fileNameWithoutExtension)
     else cout << "Unable to open file";
     return 0;
 }
+*/
