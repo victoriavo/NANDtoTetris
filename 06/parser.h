@@ -3,14 +3,16 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
 class Parser
 {
 public:
-    void openInputFile(char*);
-    String removeFileExtension(String& string);
+    void readInputFile(char*);
+    String removeFileExtension(String&);
+    void writeOutputFile(String&);
 };
 
 #endif //   PARSER
