@@ -17,7 +17,10 @@ class Code
     void replaceCInstructions(string, int);
     vector<string> separateInstruction(string, int);
     vector<string> translateInstruction(vector<string>, int);
-    
+    string compZEqual0(string);
+    string destBin(string);
+    string jumpBin(string);
+    vector<string> compBin(string);
     string convertToHex(int);
     private:
     vector<string> instructions;
