@@ -41,12 +41,114 @@ void Code::replaceCInstructions(string instructionLine, int index)
      * Either dest or jump fields may be empty.
      * If dest is empty, the "=" is omitted.
      * If jump is empty, the ";" is omitted.
+     * Binary: 1 1 1 a  c1 c2 c3 c4  c5 c6 d1 d2  d3 j1 j2 j3
      */
     
     string instrLine = instructionLine;
     
     //determine if there is a dest, a jump, or both
+    string dst = "=";
+    string jmp = ";";
+    size_t foundDest = instructionLine.find(dst);
+    size_t foundJump = instructionLine.find(jmp);
     
+    string highBits = "111";
+    string compBits; //7 bits
+    string destBits; //3 bits
+    string jumpBits; //3 bits
+    
+    vector<string> fields;
+    vector<string> translatedFields;
+    
+    if(foundDest !=std::string::npos && foundJump != std::string::npos) //Dest & Jump
+    {
+        //C-instruction: dest=comp;jump
+        //Binary: 1 1 1 a  c1 c2 c3 c4  c5 c6 d1 d2  d3 j1 j2 j3
+        fields = separateInstruction(instrLine, 0);
+        //translatedFields = translateInstruction(fields, 0);
+    }
+    else if (foundDest !=std::string::npos && foundJump == std::string::npos) //Only Dest
+    {
+        //C-instruction: dest=comp
+        //Binary: 1 1 1 a  c1 c2 c3 c4  c5 c6 d1 d2  d3 0 0 0
+        fields = separateInstruction(instrLine, 1);
+        //translatedFields = translateInstruction(fields, 1);
+    }
+    else if (foundDest ==std::string::npos && foundJump != std::string::npos) //Only Jump
+    {
+        //C-instruction: comp;jump
+        //Binary: 1 1 1 0  c1 c2 c3 c4  c5 c6 0 0  0 j1 j2 j3
+        fields = separateInstruction(instrLine, 2);
+        //translatedFields = translateInstruction(fields, 2);
+    }
+    else
+    {
+        cout << "Error: Invalid C - instruction" << endl;
+    }
+}
+
+vector<string> Code::separateInstruction(string instrLine, int function)
+{
+    vector<string> cinstruction;
+    
+    string dest;
+    string comp;
+    string jump;
+    
+    if(function == 0)
+    {
+        dest = instrLine.substr(0, instrLine.rfind("="));
+        comp = instrLine.substr(instrLine.rfind("=")+1, instrLine.rfind(";"));
+        jump = instrLine.substr(instrLine.rfind(";")+1, (instrLine.length()-1));
+        cinstruction.push_back(dest);
+        cinstruction.push_back(comp);
+        cinstruction.push_back(jump);
+    }
+    if(function == 1)
+    {
+        dest = instrLine.substr(0, instrLine.rfind("="));
+        comp = instrLine.substr(instrLine.rfind("=")+1, (instrLine.length()-1));
+        cinstruction.push_back(dest);
+        cinstruction.push_back(comp);
+    }
+    if(function == 2)
+    {
+        comp = instrLine.substr(0, instrLine.rfind(";"));
+        jump = instrLine.substr(instrLine.rfind(";")+1, (instrLine.length()-1));
+        cinstruction.push_back(comp);
+        cinstruction.push_back(jump);
+    }
+    cout << "dest: " << dest << endl;
+    cout << "comp: " << comp << endl;
+    cout << "jump: " << jump << endl;
+    
+    return cinstruction;
+}
+
+vector<string> Code::translateInstruction(vector<string> fields, int function)
+{
+    vector<string> binary;
+    
+    string dest;
+    string comp;
+    string jump;
+    
+    /*
+    if(function == 0)
+    {
+        
+    }
+    if(function == 1)
+    {
+        
+    }
+    if(function == 2)
+    {
+        
+    }
+     */
+    
+    return binary;
 }
 
 string Code::convertToHex(int value)

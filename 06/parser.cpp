@@ -3,40 +3,57 @@
 vector<string> Parser::readInputFile(char* inputFile)
 {
     vector<string> instructions;
-    
-    string line;
-    ifstream myfile (inputFile);
-    if(myfile.is_open())
+    if (checkFileExtension(inputFile) == true)
     {
-        while ( getline (myfile, line) )
+        string line;
+        ifstream myfile (inputFile);
+        if(myfile.is_open())
         {
-            if((line[0] != '/') && (line[1] != '/') && (line.length() != 1)) //removes single line comments and blank lines
+            while ( getline (myfile, line) )
             {
-                    //handling for inline comments ex: @R2 //ugh another comment
-                    line = line.substr(0, line.rfind("//"));
-                    //add instruction to vector of instructions
-                    instructions.push_back(line);
-            }
-            //after finding start symbol, don't print until you find the end symbol
-            if ((line[0] == '/') && (line[1] == '*')) //handles multiline (paragraph) comments
-            {
-                getline (myfile, line);
-                while((line[line.length()-2] != '*') && (line[line.length()-1] != '/')
-                      && (getline (myfile, line)))
+                if((line[0] != '/') && (line[1] != '/') && (line.length() != 1)) //removes single line comments and blank lines
                 {
-                        cout << "";
+                        //handling for inline comments ex: @R2 //ugh another comment
+                        line = line.substr(0, line.rfind("//"));
+                        //add instruction to vector of instructions
+                        instructions.push_back(line);
+                }
+                //after finding start symbol, don't print until you find the end symbol
+                if ((line[0] == '/') && (line[1] == '*')) //handles multiline (paragraph) comments
+                {
+                    getline (myfile, line);
+                    while((line[line.length()-2] != '*') && (line[line.length()-1] != '/')
+                          && (getline (myfile, line)))
+                    {
+                            cout << "";
+                    }
                 }
             }
+            myfile.close();
         }
-        myfile.close();
+        else cout << "Unable to open file";
+    
+        //check vector of instructions
+        //for(int i = 0; i < instructions.size(); i++)
+            //cout << instructions[i] << endl;
     }
-    else cout << "Unable to open file";
-    
-    //check vector of instructions
-    for(int i = 0; i < instructions.size(); i++)
-        cout << instructions[i] << endl;
-    
+    else
+    {
+        cout << "Error: Invalid file extension. Must be an .asm file." << endl;
+        exit (0);
+    }
     return instructions;
+}
+
+bool Parser::checkFileExtension(string inputFileName)
+{
+    string fileName = inputFileName;
+    string fileExtension = inputFileName.substr(inputFileName.length()-4, inputFileName.length()-1);
+    
+    if (fileExtension == ".asm")
+        return true;
+    
+    return false;
 }
 
 string Parser::removeFileExtension(string inputFileName)

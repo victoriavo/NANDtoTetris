@@ -14,6 +14,7 @@ public:
     vector<string> readInputFile(char*);
     string removeFileExtension(string);
     void writeOutputFile(string, vector<string>);
+    bool checkFileExtension(string);
 private:
     vector<string> instructions;
 };
