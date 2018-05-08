@@ -1,12 +1,13 @@
 #include "symbolTable.h"
 
-void initializePredefinedSymbols()
+typedef pair<string, int> Key;
+typedef map< Key, string > Map;
+Map PredefinedMap;
+
+void SymbolTable::initializePredefinedSymbols()
 {
     //Making a symbol table/map
     //Formated with LABEL - RAM ADDRESS - HEXADECIMAL ADDRESS
-    
-    typedef pair<string, int> Key;
-    typedef map< Key, string > Map;
     
     Key sp("SP", 0); //hexa: 0x0000
     Key lcl("LCL", 1); //hexa: 0x0001
@@ -32,7 +33,6 @@ void initializePredefinedSymbols()
     Key screen("SCREEN", 16384); //hexa: 0x4000
     Key kbd("KBD", 24576); //hexa: 0x6000
     
-    Map PredefinedMap;
     
     PredefinedMap.insert(std::make_pair(sp, "0x0000"));
     PredefinedMap.insert(std::make_pair(lcl, "0x0001"));
@@ -60,3 +60,13 @@ void initializePredefinedSymbols()
     
     return;
 }
+
+typedef map< string, int > SymbolMap;
+SymbolMap Symbols;
+
+//void SymbolTable::initializeSymbolTable()
+//{
+    
+
+    
+//}

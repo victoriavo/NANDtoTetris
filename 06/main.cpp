@@ -1,6 +1,7 @@
 #include <iostream>
 #include "parser.h"
 #include "symbolTable.h"
+#include "code.h"
 
 using namespace std;
 
@@ -44,6 +45,12 @@ int main(int argc, char* const argv[])
     Parser parser;
     fileInstructions = parser.readInputFile(argv[1]);
     SymbolTable symbolTable;
+    Code code;
+    vector<string> processedInstructions;
+    processedInstructions = code.processInstructions(fileInstructions);
+    string outputFileName = parser.removeFileExtension(argv[1]);
+    cout <<outputFileName << endl;
+    parser.writeOutputFile(outputFileName, processedInstructions);
     return 0;
 }
 

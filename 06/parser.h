@@ -12,8 +12,8 @@ class Parser
 {
 public:
     vector<string> readInputFile(char*);
-    string removeFileExtension(string&);
-    //void writeOutputFile(String&);
+    string removeFileExtension(string);
+    void writeOutputFile(string, vector<string>);
 private:
     vector<string> instructions;
 };

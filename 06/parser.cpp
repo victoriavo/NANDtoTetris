@@ -35,7 +35,7 @@ vector<string> Parser::readInputFile(char* inputFile)
     return instructions;
 }
 
-string Parser::removeFileExtension(string& inputFileName)
+string Parser::removeFileExtension(string inputFileName)
 {
     string fileName = inputFileName;
     string fileNameWithoutExtension = fileName.substr(0, fileName.rfind("."));
@@ -44,17 +44,18 @@ string Parser::removeFileExtension(string& inputFileName)
 }
 
 //will write binary code
-/*
-void Parser::writeOutputFile(String& fileNameWithoutExtension)
+
+void Parser::writeOutputFile(string fileNameWithoutExtension, vector<string> instructionsToWrite)
 {
     ofstream myfile (fileNameWithoutExtension + ".hack");
     if (myfile.is_open())
     {
-        myfile << "This is a line.\n";
-        myfile << "This is another line.\n";
+        for(int i = 0; i < instructionsToWrite.size(); i++)
+        {
+            myfile << instructionsToWrite[i] << "\n";
+        }
         myfile.close();
     }
     else cout << "Unable to open file";
-    return 0;
+    return;
 }
-*/
