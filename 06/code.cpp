@@ -11,6 +11,10 @@ vector<string> Code::processInstructions(vector<string> fileInstructions)
         {
             replaceAInstructions(instructions[i], i);
         }
+        else //C - instructions
+        {
+            replaceCInstructions(instructions[i], i);
+        }
     }
     return instructions;
 }
@@ -28,6 +32,21 @@ void Code::replaceAInstructions(string instructionLine, int index)
     instructions[index] = hexAddress;
     
     return;
+}
+
+//only works for basic instructions
+void Code::replaceCInstructions(string instructionLine, int index)
+{
+    /* C-instruction: dest=comp;jump 
+     * Either dest or jump fields may be empty.
+     * If dest is empty, the "=" is omitted.
+     * If jump is empty, the ";" is omitted.
+     */
+    
+    string instrLine = instructionLine;
+    
+    //determine if there is a dest, a jump, or both
+    
 }
 
 string Code::convertToHex(int value)

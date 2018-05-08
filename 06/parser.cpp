@@ -12,6 +12,9 @@ vector<string> Parser::readInputFile(char* inputFile)
         {
             if((line[0] != '/') && (line[1] != '/') && (line.length() != 1)) //removes single line comments and blank lines
             {
+                    //handling for inline comments ex: @R2 //ugh another comment
+                    line = line.substr(0, line.rfind("//"));
+                    //add instruction to vector of instructions
                     instructions.push_back(line);
             }
             //after finding start symbol, don't print until you find the end symbol
@@ -29,8 +32,9 @@ vector<string> Parser::readInputFile(char* inputFile)
     }
     else cout << "Unable to open file";
     
-    //for(int i = 0; i < instructions.size(); i++)
-    //    cout << instructions[i] << endl;
+    //check vector of instructions
+    for(int i = 0; i < instructions.size(); i++)
+        cout << instructions[i] << endl;
     
     return instructions;
 }

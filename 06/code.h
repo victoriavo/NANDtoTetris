@@ -14,6 +14,7 @@ class Code
     public:
     vector<string> processInstructions(vector<string>);
     void replaceAInstructions(string, int);
+    void replaceCInstructions(string, int);
     string convertToHex(int);
     private:
     vector<string> instructions;
