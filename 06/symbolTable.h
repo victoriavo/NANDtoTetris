@@ -12,7 +12,7 @@ using namespace std;
 class SymbolTable
 {
     public:
-    void initializeSymbolTable();
+    void initializePredefinedTable();
     private:
     vector<string> instructions;
 };

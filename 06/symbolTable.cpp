@@ -1,6 +1,6 @@
 #include "symbolTable.h"
 
-void initializeSymbolTable()
+void initializePredefinedSymbols()
 {
     //Making a symbol table/map
     //Formated with LABEL - RAM ADDRESS - HEXADECIMAL ADDRESS
@@ -32,31 +32,31 @@ void initializeSymbolTable()
     Key screen("SCREEN", 16384); //hexa: 0x4000
     Key kbd("KBD", 24576); //hexa: 0x6000
     
-    Map SymbolMap;
+    Map PredefinedMap;
     
-    SymbolMap.insert(std::make_pair(sp, "0x0000"));
-    SymbolMap.insert(std::make_pair(lcl, "0x0001"));
-    SymbolMap.insert(std::make_pair(arg, "0x0002"));
-    SymbolMap.insert(std::make_pair(_this, "0x0003"));
-    SymbolMap.insert(std::make_pair(that, "0x0004"));
-    SymbolMap.insert(std::make_pair(r0, "0x0000"));
-    SymbolMap.insert(std::make_pair(r1, "0x0001"));
-    SymbolMap.insert(std::make_pair(r2, "0x0002"));
-    SymbolMap.insert(std::make_pair(r3, "0x0003"));
-    SymbolMap.insert(std::make_pair(r4, "0x0004"));
-    SymbolMap.insert(std::make_pair(r5, "0x0005"));
-    SymbolMap.insert(std::make_pair(r6, "0x0006"));
-    SymbolMap.insert(std::make_pair(r7, "0x0007"));
-    SymbolMap.insert(std::make_pair(r8, "0x0008"));
-    SymbolMap.insert(std::make_pair(r9, "0x0009"));
-    SymbolMap.insert(std::make_pair(r10, "0x000A"));
-    SymbolMap.insert(std::make_pair(r11, "0x000B"));
-    SymbolMap.insert(std::make_pair(r12, "0x000C"));
-    SymbolMap.insert(std::make_pair(r13, "0x000D"));
-    SymbolMap.insert(std::make_pair(r14, "0x000E"));
-    SymbolMap.insert(std::make_pair(r15, "0x000F"));
-    SymbolMap.insert(std::make_pair(screen, "0x4000"));
-    SymbolMap.insert(std::make_pair(kbd, "0x6000"));
+    PredefinedMap.insert(std::make_pair(sp, "0x0000"));
+    PredefinedMap.insert(std::make_pair(lcl, "0x0001"));
+    PredefinedMap.insert(std::make_pair(arg, "0x0002"));
+    PredefinedMap.insert(std::make_pair(_this, "0x0003"));
+    PredefinedMap.insert(std::make_pair(that, "0x0004"));
+    PredefinedMap.insert(std::make_pair(r0, "0x0000"));
+    PredefinedMap.insert(std::make_pair(r1, "0x0001"));
+    PredefinedMap.insert(std::make_pair(r2, "0x0002"));
+    PredefinedMap.insert(std::make_pair(r3, "0x0003"));
+    PredefinedMap.insert(std::make_pair(r4, "0x0004"));
+    PredefinedMap.insert(std::make_pair(r5, "0x0005"));
+    PredefinedMap.insert(std::make_pair(r6, "0x0006"));
+    PredefinedMap.insert(std::make_pair(r7, "0x0007"));
+    PredefinedMap.insert(std::make_pair(r8, "0x0008"));
+    PredefinedMap.insert(std::make_pair(r9, "0x0009"));
+    PredefinedMap.insert(std::make_pair(r10, "0x000A"));
+    PredefinedMap.insert(std::make_pair(r11, "0x000B"));
+    PredefinedMap.insert(std::make_pair(r12, "0x000C"));
+    PredefinedMap.insert(std::make_pair(r13, "0x000D"));
+    PredefinedMap.insert(std::make_pair(r14, "0x000E"));
+    PredefinedMap.insert(std::make_pair(r15, "0x000F"));
+    PredefinedMap.insert(std::make_pair(screen, "0x4000"));
+    PredefinedMap.insert(std::make_pair(kbd, "0x6000"));
     
     return;
 }
