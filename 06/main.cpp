@@ -1,5 +1,6 @@
 #include <iostream>
 #include "parser.h"
+#include "symbolTable.h"
 
 using namespace std;
 
@@ -38,9 +39,11 @@ using namespace std;
 
 int main(int argc, char* const argv[])
 {
+    vector<string> fileInstructions;
     //1. Parse the assembly file that is read in.
     Parser parser;
-    parser.readInputFile(argv[1]);
+    fileInstructions = parser.readInputFile(argv[1]);
+    SymbolTable symbolTable;
     return 0;
 }
 

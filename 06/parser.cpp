@@ -1,7 +1,9 @@
 #include "parser.h"
 
-void Parser::readInputFile(char* inputFile)
+vector<string> Parser::readInputFile(char* inputFile)
 {
+    vector<string> instructions;
+    
     string line;
     ifstream myfile (inputFile);
     if(myfile.is_open())
@@ -10,7 +12,7 @@ void Parser::readInputFile(char* inputFile)
         {
             if((line[0] != '/') && (line[1] != '/') && (line.length() != 1)) //removes single line comments and blank lines
             {
-                    cout << line << '\n';
+                    instructions.push_back(line);
             }
             //after finding start symbol, don't print until you find the end symbol
             if ((line[0] == '/') && (line[1] == '*')) //handles multiline (paragraph) comments
@@ -27,7 +29,10 @@ void Parser::readInputFile(char* inputFile)
     }
     else cout << "Unable to open file";
     
-    return;
+    //for(int i = 0; i < instructions.size(); i++)
+    //    cout << instructions[i] << endl;
+    
+    return instructions;
 }
 
 string Parser::removeFileExtension(string& inputFileName)
