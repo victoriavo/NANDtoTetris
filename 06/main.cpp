@@ -49,7 +49,6 @@ int main(int argc, char* const argv[])
     vector<string> processedInstructions;
     processedInstructions = code.processInstructions(fileInstructions);
     string outputFileName = parser.removeFileExtension(argv[1]);
-    cout <<outputFileName << endl;
     parser.writeOutputFile(outputFileName, processedInstructions);
     return 0;
 }

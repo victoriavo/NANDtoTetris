@@ -25,7 +25,7 @@ void Code::replaceAInstructions(string instructionLine, int index)
     //remove '@' symbol
     string instrLine = instructionLine;
     instrLine = instrLine.substr(1, (instructionLine.length()-1));
-    //convert string address value to int and then to hexadecimal
+    //convert string address value to int and then to binary
     int addressVal = stoi(instrLine);
     string binAddress =  std::bitset<16>(addressVal).to_string();
     instructions[index] = binAddress;
@@ -52,6 +52,7 @@ void Code::replaceCInstructions(string instructionLine, int index)
     
     string highBits = "111";
     string abit;
+    
     string compBits; //7 bits
     string destBits; //3 bits
     string jumpBits; //3 bits
@@ -77,22 +78,29 @@ void Code::replaceCInstructions(string instructionLine, int index)
     {
         //C-instruction: dest=comp
         //Binary: 1 1 1 a  c1 c2 c3 c4  c5 c6 d1 d2  d3 0 0 0
-        jumpBits = "000";
+        std::stringstream ss;
+        ss << std::setw(3) << std::setfill('0') << "000";
+        jumpBits = ss.str();
         fields = separateInstruction(instrLine, 1);
         translatedFields = translateInstruction(fields, 1);
         translatedString.append(highBits);
         for(int i = 0; i < translatedFields.size(); i++)
+        {
             translatedString.append(translatedFields[i]);
+        }
         translatedString.append(jumpBits);
-        
         instructions[index] = translatedString;
     }
     else if (foundDest ==std::string::npos && foundJump != std::string::npos) //Only Jump
     {
         //C-instruction: comp;jump
         //Binary: 1 1 1 0  c1 c2 c3 c4  c5 c6 0 0  0 j1 j2 j3
-        abit = "0";
-        destBits = "000";
+        std::stringstream ss1;
+        ss1 << std::setw(3) << std::setfill('0') << "000";
+        destBits = ss1.str();
+        std::stringstream ss2;
+        ss2 << std::setw(1) << std::setfill('0') << "0";
+        abit = ss2.str();
         fields = separateInstruction(instrLine, 2);
         translatedFields = translateInstruction(fields, 2);
         translatedString.append(highBits);
@@ -140,9 +148,6 @@ vector<string> Code::separateInstruction(string instrLine, int function)
         cinstruction.push_back(comp);
         cinstruction.push_back(jump);
     }
-    cout << "dest: " << dest << endl;
-    cout << "comp: " << comp << endl;
-    cout << "jump: " << jump << endl;
     
     return cinstruction;
 }
@@ -156,9 +161,9 @@ vector<string> Code::translateInstruction(vector<string> fields, int function)
     string jump;
     string a;
     
-    
     if(function == 0) //dest, comp, and jump fields
     {
+        //fields argument = dest, comp, jump
         dest = destBin(fields[0]);
         comp = compBin(fields[1])[1];
         a = compBin(fields[1])[0];
@@ -170,269 +175,452 @@ vector<string> Code::translateInstruction(vector<string> fields, int function)
     }
     if(function == 1) //dest and comp fields
     {
+        //fields argument = dest, comp
+        
         comp = compBin(fields[1])[1];
         a = compBin(fields[1])[0];
-        dest = destBin(fields[0]);
+        dest = destBin(fields[0]); //dest is fine
         binary.push_back(a);
         binary.push_back(comp);
         binary.push_back(dest);
     }
     if(function == 2) //comp and jump fields
     {
+        //fields argument = comp, jump
         comp = compZEqual0(fields[0]);
         binary.push_back(comp);
         jump = jumpBin(fields[1]);
         binary.push_back(jump);
     }
-    for(int i = i; i < binary.size(); i++)
-        cout << binary[i] << endl;
     return binary;
 }
 
 string Code::destBin(string dest)
 {
+    std::stringstream ss;
+    string returnStr;
+    
     if(dest == "M")
-        return "001";
+    {
+        ss << std::setw(3) << std::setfill('0') << "001";
+        returnStr= ss.str();
+        return returnStr;
+    }
     if(dest == "D")
-        return "010";
+    {
+        ss << std::setw(3) << std::setfill('0') << "010";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(dest == "MD")
-        return "011";
+    {
+        ss << std::setw(3) << std::setfill('0') << "011";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(dest == "A")
-        return "100";
+    {
+        ss << std::setw(3) << std::setfill('0') << "100";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(dest == "AM")
-        return "101";
+    {
+        ss << std::setw(3) << std::setfill('0') << "101";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(dest == "AD")
-        return "110";
+    {
+        ss << std::setw(3) << std::setfill('0') << "110";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(dest == "AMD")
-        return "111";
+    {
+        ss << std::setw(3) << std::setfill('0') << "111";
+        returnStr = ss.str();
+        return returnStr;
+    }
     return dest;
 }
 
-string Code::jumpBin(string jump)
+string Code::jumpBin(string jumpIn)
 {
+    string jump = jumpIn.substr(0, (jumpIn.length()-1));
+    std::stringstream ss;
+    string returnStr;
+    
     if(jump == "JGT")
-        return "001";
+    {
+        ss << std::setw(3) << std::setfill('0') << "001";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(jump == "JEQ")
-        return "010";
+    {
+        ss << std::setw(3) << std::setfill('0') << "010";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(jump == "JGE")
-        return "011";
+    {
+        ss << std::setw(3) << std::setfill('0') << "011";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(jump == "JLT")
-        return "100";
+    {
+        ss << std::setw(3) << std::setfill('0') << "100";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(jump == "JNE")
-        return "101";
+    {
+        ss << std::setw(3) << std::setfill('0') << "101";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(jump == "JLE")
-        return "110";
+    {
+        ss << std::setw(3) << std::setfill('0') << "110";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(jump == "JMP")
-        return "111";
+    {
+        ss << std::setw(3) << std::setfill('0') << "111";
+        returnStr = ss.str();
+        return returnStr;
+    }
+    
     return jump;
 }
 
 
-string Code::compZEqual0(string comp)
+string Code::compZEqual0(string compIn)
 {
+    string comp = compIn.substr(0, (compIn.length()-1));
+    std::stringstream ss;
+    string returnStr;
+    
     if(comp == "0")
-        return "101010";
+    {
+        ss << std::setw(6) << std::setfill('0') << "101010";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "1")
-        return "111111";
+    {
+        ss << std::setw(6) << std::setfill('0') << "111111";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "-1")
-        return "111010";
+    {
+        ss << std::setw(6) << std::setfill('0') << "111010";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "D")
-        return "001100";
+    {
+        ss << std::setw(6) << std::setfill('0') << "001100";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "A")
-        return "110000";
+    {
+        ss << std::setw(6) << std::setfill('0') << "110000";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "!D")
-        return "001101";
+    {
+        ss << std::setw(6) << std::setfill('0') << "001101";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "!A")
-        return "110001";
+    {
+        ss << std::setw(6) << std::setfill('0') << "110001";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "-D")
-        return "001111";
+    {
+        ss << std::setw(6) << std::setfill('0') << "001111";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "-A")
-        return "110011";
+    {
+        ss << std::setw(6) << std::setfill('0') << "110011";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "D+1")
-        return "011111";
+    {
+        ss << std::setw(6) << std::setfill('0') << "011111";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "A+1")
-        return "110111";
+    {
+        ss << std::setw(6) << std::setfill('0') << "110111";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "D-1")
-        return "001110";
+    {
+        ss << std::setw(6) << std::setfill('0') << "001110";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "A-1")
-        return "110010";
+    {
+        ss << std::setw(6) << std::setfill('0') << "110010";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "D+A")
-        return "000010";
+    {
+        ss << std::setw(6) << std::setfill('0') << "000010";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "D-A")
-        return "010011";
+    {
+        ss << std::setw(6) << std::setfill('0') << "010011";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "A-D")
-        return "000111";
+    {
+        ss << std::setw(6) << std::setfill('0') << "000111";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "D&A")
-        return "000000";
+    {
+        ss << std::setw(6) << std::setfill('0') << "000000";
+        returnStr = ss.str();
+        return returnStr;
+    }
     if(comp == "D|A")
-        return "010101";
+    {
+        ss << std::setw(6) << std::setfill('0') << "010101";
+        returnStr = ss.str();
+        return returnStr;
+    }
     return comp;
 }
 
-vector<string> Code::compBin(string comp)
+vector<string> Code::compBin(string compIn)
 {
+    string comp = compIn.substr(0, (compIn.length()-1));
     vector<string> binary;
     string a;
     string compBin;
     
+    std::stringstream ss;
+    std::stringstream ss1;
+
+    
     if(comp == "M")
     {
-        compBin = "110000";
+        ss << std::setw(6) << std::setfill('0') << "110000";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "!M")
     {
-        compBin = "110001";
+        ss << std::setw(6) << std::setfill('0') << "110001";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "-M")
     {
-        compBin = "110011";
+        ss << std::setw(6) << std::setfill('0') << "110011";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "M+1")
     {
-        compBin = "110111";
+        ss << std::setw(6) << std::setfill('0') << "110111";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "M-1")
     {
-        compBin = "110010";
+        ss << std::setw(6) << std::setfill('0') << "110010";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "D+M")
     {
-        compBin = "000010";
+        ss << std::setw(6) << std::setfill('0') << "000010";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "D-M")
     {
-        compBin = "010011";
+        ss << std::setw(6) << std::setfill('0') << "010011";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "M-D")
     {
-        compBin = "000111";
+        ss << std::setw(6) << std::setfill('0') << "000111";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "D&M")
     {
-        compBin = "000000";
+        ss << std::setw(6) << std::setfill('0') << "000000";
+        compBin = ss.str();
         a = "1";
     }
     if(comp == "D|M")
     {
-        compBin = "010101";
+        ss << std::setw(6) << std::setfill('0') << "010101";
+        compBin = ss.str();
         a = "1";
     }
+    
+    
+    
+    
+    
+    
     if(comp == "0")
     {
-        compBin = "101010";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "101010";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "1")
     {
-        compBin = "111111";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "111111";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "-1")
     {
-        compBin = "111010";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "111010";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "D")
     {
-        compBin = "001100";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "001100";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "A")
     {
-        compBin = "110000";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "110000";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "!D")
     {
-        compBin = "001101";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "001101";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "!A")
     {
-        compBin = "110001";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "110001";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "-D")
     {
-        compBin = "001111";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "001111";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "-A")
     {
-        compBin = "110011";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "110011";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "D+1")
     {
-        compBin = "011111";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "011111";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "A+1")
     {
-        compBin = "110111";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "110111";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "D-1")
     {
-        compBin = "001110";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "001110";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "A-1")
     {
-        compBin = "110010";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "110010";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "D+A")
     {
-        compBin = "000010";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "000010";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "D-A")
     {
-        compBin = "010011";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "010011";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "A-D")
     {
-        compBin = "000111";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "000111";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "D&A")
     {
-        compBin = "000000";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "000000";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     if(comp == "D|A")
     {
-        compBin = "010101";
-        a = "0";
+        ss << std::setw(6) << std::setfill('0') << "010101";
+        compBin = ss.str();
+        ss1 << std::setw(1) << std::setfill('0') << "0";
+        a = ss1.str();
     }
     
     binary.push_back(a);
     binary.push_back(compBin);
     return binary;
 
-}
-
-string Code::convertToHex(int value)
-{
-    //string of 16 characters
-    stringstream sstream;
-    sstream << std::hex << value;
-    string lowerFigs = sstream.str();
-    int numDigits = lowerFigs.length();
-    int digitsToAdd = 16 - numDigits;
-    string result;
-    for(int i = 0; i < digitsToAdd; i++)
-        result.append("0");
-    result.append(lowerFigs);
-    return result;
 }

@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
 
@@ -21,7 +22,6 @@ class Code
     string destBin(string);
     string jumpBin(string);
     vector<string> compBin(string);
-    string convertToHex(int);
     private:
     vector<string> instructions;
 };
