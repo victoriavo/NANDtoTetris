@@ -56,24 +56,40 @@ void Code::replaceAInstructions(string instructionLine, int index)
         //check if symbolName is a predefined label in the symbolMap
         if(symbolTable.PredefinedMap.count( symbolName ) != 0)
         {
-            cout << "what is this: " << symbolTable.PredefinedMap.find(symbolName)->first[1] << endl;
-            //cout << "value " << value << endl;
-            //string binAddress =  std::bitset<16>(value).to_string();
-            //instructions[index] = binAddress;
+            int value;
+            std::stringstream ss;
+            ss << std::setw(16) << std::setfill('0') << symbolTable.PredefinedMap.find(symbolName)->first[1];
+            value =stoi( ss.str());
+            string binAddress = std::bitset<16>(value).to_string();
+            instructions[index] = binAddress;
         }
         if(symbolTable.PredefinedMap.count( symbolName2 ) != 0)
         {
-            cout << "what is this: " << symbolTable.PredefinedMap.find(symbolName2)->first[1] << endl;
             int value;
             std::stringstream ss;
             ss << std::setw(16) << std::setfill('0') << symbolTable.PredefinedMap.find(symbolName2)->first[1];
             value =stoi( ss.str());
-            //int value = stoi(symbolTable.PredefinedMap.find(symbolName2)->first[1]);
-            cout << "value " << value << endl;
-            //string value = symbolTable.PredefinedMap.find(symbolName2)->first[1];
-            //cout << "value " << value << endl;
             string binAddress = std::bitset<16>(value).to_string();
             instructions[index] = binAddress;
+        }
+        if(symbolTable.PredefinedMap.count( symbolName ) == 0 && symbolTable.PredefinedMap.count( symbolName2 ) == 0 &&
+           symbolTable.Symbols.count( symbolName )== 0)
+        {
+            int value;
+            if(symbolTable.Symbols.empty())
+            {
+                symbolTable.Symbols.insert(std::make_pair(symbolName, 1024));
+                value = 1024;
+                string binAddress = std::bitset<16>(value).to_string();
+                instructions[index] = binAddress;
+                cout << "size" << symbolTable.Symbols.empty() << endl;
+            }
+            else
+            {
+                int size = symbolTable.Symbols.size();
+                value = 1024 + size;
+                symbolTable.Symbols.insert(std::make_pair(symbolName, 1024 + size));
+            }
         }
 
                                               
