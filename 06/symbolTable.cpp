@@ -1,14 +1,13 @@
 #include "symbolTable.h"
 
-typedef pair<string, int> Key;
-typedef map< Key, string > Map;
-Map PredefinedMap;
+
 
 void SymbolTable::initializePredefinedSymbols()
 {
     //Making a symbol table/map
     //Formated with LABEL - RAM ADDRESS - HEXADECIMAL ADDRESS
     
+    /*
     Key sp("SP", 0); //hexa: 0x0000
     Key lcl("LCL", 1); //hexa: 0x0001
     Key arg("ARG", 2); //hexa: 0x0002
@@ -57,12 +56,61 @@ void SymbolTable::initializePredefinedSymbols()
     PredefinedMap.insert(std::make_pair(r15, "0x000F"));
     PredefinedMap.insert(std::make_pair(screen, "0x4000"));
     PredefinedMap.insert(std::make_pair(kbd, "0x6000"));
+     */
+    /*
+    Key sp("SP"); //hexa: 0x0000
+    Key lcl("LCL"); //hexa: 0x0001
+    Key arg("ARG"); //hexa: 0x0002
+    Key _this("THIS"); //hexa: 0x0003
+    Key that("THAT"); //hexa: 0x0004
+    Key r0("RO"); //hexa: 0x0000
+    Key r1("R1"); //hexa: 0x0001
+    Key r2("R2"); //hexa: 0x0002
+    Key r3("R3"); //hexa: 0x0003
+    Key r4("R4"); //hexa: 0x0004
+    Key r5("R5"); //hexa: 0x0005
+    Key r6("R6"); //hexa: 0x0006
+    Key r7("R7"); //hexa: 0x0007
+    Key r8("R8"); //hexa: 0x0008
+    Key r9("R9"); //hexa: 0x0009
+    Key r10("R10"); //hexa: 0x000A
+    Key r11("R11"); //hexa: 0x000B
+    Key r12("R12"); //hexa: 0x000C
+    Key r13("R13"); //hexa: 0x000D
+    Key r14("R14"); //hexa: 0x000E
+    Key r15("R15"); //hexa: 0x000F
+    Key screen("SCREEN"); //hexa: 0x4000
+    Key kbd("KBD"); //hexa: 0x6000
+    */
     
+    PredefinedMap.insert(std::make_pair("SP", 0));
+    PredefinedMap.insert(std::make_pair("LCL", 1));
+    PredefinedMap.insert(std::make_pair("ARG", 2));
+    PredefinedMap.insert(std::make_pair("THIS", 3));
+    PredefinedMap.insert(std::make_pair("THAT", 4));
+    PredefinedMap.insert(std::make_pair("R0", 0));
+    PredefinedMap.insert(std::make_pair("R1", 1));
+    PredefinedMap.insert(std::make_pair("R2", 2));
+    PredefinedMap.insert(std::make_pair("R3", 3));
+    PredefinedMap.insert(std::make_pair("R4", 4));
+    PredefinedMap.insert(std::make_pair("R5", 5));
+    PredefinedMap.insert(std::make_pair("R6", 6));
+    PredefinedMap.insert(std::make_pair("R7", 7));
+    PredefinedMap.insert(std::make_pair("R8", 8));
+    PredefinedMap.insert(std::make_pair("R9", 9));
+    PredefinedMap.insert(std::make_pair("R10", 10));
+    PredefinedMap.insert(std::make_pair("R11", 11));
+    PredefinedMap.insert(std::make_pair("R12", 12));
+    PredefinedMap.insert(std::make_pair("R13", 13));
+    PredefinedMap.insert(std::make_pair("R14", 14));
+    PredefinedMap.insert(std::make_pair("R15", 15));
+    PredefinedMap.insert(std::make_pair("SCREEN", 16384));
+    PredefinedMap.insert(std::make_pair("KBD", 24576));
+
     return;
 }
 
-typedef map< string, int > SymbolMap;
-SymbolMap Symbols;
+
 
 //void SymbolTable::initializeSymbolTable()
 //{

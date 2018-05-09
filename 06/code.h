@@ -7,6 +7,8 @@
 #include <sstream>
 #include <vector>
 #include <iomanip>
+#include "symbolTable.h"
+#include <map>
 
 using namespace std;
 
@@ -25,6 +27,7 @@ class Code
     bool isNumericAddress(string);
     private:
     vector<string> instructions;
+    SymbolTable symbolTable;
 };
 
 #endif //   CODE

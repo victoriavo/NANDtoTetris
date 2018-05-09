@@ -1,9 +1,12 @@
 #include "code.h"
 
+
 vector<string> instructions;
+
 
 vector<string> Code::processInstructions(vector<string> fileInstructions)
 {
+    symbolTable.initializePredefinedSymbols();
     instructions = fileInstructions;
     for(int i = 0; i < instructions.size(); i++)
     {
@@ -26,11 +29,13 @@ void Code::replaceAInstructions(string instructionLine, int index)
     string instrLine = instructionLine;
     instrLine = instrLine.substr(1, (instructionLine.length()-1));
     
+    /*
     //remove R if it is an R value
     if(instrLine[0] == 'R' && isdigit(instrLine[1]) )
     {
         instrLine = instrLine.substr(1, (instructionLine.length()-1));
     }
+    */
     
     //if numeric value
     //convert string address value to int and then to binary
@@ -43,8 +48,35 @@ void Code::replaceAInstructions(string instructionLine, int index)
     //else it is a symbol
     else
     {
+        //std::map<string,int>::iterator it;
         string symbolName = instrLine;
+        symbolName = instrLine.substr(0, (instructionLine.length()-1));
+        string symbolName2 = instrLine.substr(0, (instructionLine.length()-2));
         
+        //check if symbolName is a predefined label in the symbolMap
+        if(symbolTable.PredefinedMap.count( symbolName ) != 0)
+        {
+            cout << "what is this: " << symbolTable.PredefinedMap.find(symbolName)->first[1] << endl;
+            //cout << "value " << value << endl;
+            //string binAddress =  std::bitset<16>(value).to_string();
+            //instructions[index] = binAddress;
+        }
+        if(symbolTable.PredefinedMap.count( symbolName2 ) != 0)
+        {
+            cout << "what is this: " << symbolTable.PredefinedMap.find(symbolName2)->first[1] << endl;
+            int value;
+            std::stringstream ss;
+            ss << std::setw(16) << std::setfill('0') << symbolTable.PredefinedMap.find(symbolName2)->first[1];
+            value =stoi( ss.str());
+            //int value = stoi(symbolTable.PredefinedMap.find(symbolName2)->first[1]);
+            cout << "value " << value << endl;
+            //string value = symbolTable.PredefinedMap.find(symbolName2)->first[1];
+            //cout << "value " << value << endl;
+            string binAddress = std::bitset<16>(value).to_string();
+            instructions[index] = binAddress;
+        }
+
+                                              
     }
     return;
 }
@@ -219,44 +251,45 @@ string Code::destBin(string dest)
 {
     std::stringstream ss;
     string returnStr;
+    string dest1 = dest.substr(0, (dest.length()-1));
     
-    if(dest == "M")
+    if(dest == "M" || dest1 == "M")
     {
         ss << std::setw(3) << std::setfill('0') << "001";
         returnStr= ss.str();
         return returnStr;
     }
-    if(dest == "D")
+    if(dest == "D" || dest1 == "D")
     {
         ss << std::setw(3) << std::setfill('0') << "010";
         returnStr = ss.str();
         return returnStr;
     }
-    if(dest == "MD")
+    if(dest == "MD" || dest1 == "MD")
     {
         ss << std::setw(3) << std::setfill('0') << "011";
         returnStr = ss.str();
         return returnStr;
     }
-    if(dest == "A")
+    if(dest == "A" || dest1 == "A")
     {
         ss << std::setw(3) << std::setfill('0') << "100";
         returnStr = ss.str();
         return returnStr;
     }
-    if(dest == "AM")
+    if(dest == "AM"  || dest1 == "AM")
     {
         ss << std::setw(3) << std::setfill('0') << "101";
         returnStr = ss.str();
         return returnStr;
     }
-    if(dest == "AD")
+    if(dest == "AD"  || dest1 == "AD")
     {
         ss << std::setw(3) << std::setfill('0') << "110";
         returnStr = ss.str();
         return returnStr;
     }
-    if(dest == "AMD")
+    if(dest == "AMD"  || dest1 == "AMD")
     {
         ss << std::setw(3) << std::setfill('0') << "111";
         returnStr = ss.str();
@@ -267,6 +300,8 @@ string Code::destBin(string dest)
 
 string Code::jumpBin(string jumpIn)
 {
+    cout << "Jump string : " << jumpIn << endl;
+    cout << "string size : " << jumpIn.size() << endl;
     string jump = jumpIn.substr(0, (jumpIn.length()));
     string jump1 = jumpIn.substr(0, (jumpIn.length()-1));
     std::stringstream ss;
@@ -323,113 +358,115 @@ string Code::compZEqual0(string compIn)
 {
     cout << "compZEqual0" << endl;
     string comp = compIn.substr(0, (compIn.length()-1));
+    string comp1 = compIn.substr(0, (compIn.length()));
+    
     cout << "comp : " << comp << endl;
     std::stringstream ss;
     string returnStr;
     
-    if(comp == "0")
+    if(comp == "0" || comp1 == "0" )
     {
         ss << std::setw(6) << std::setfill('0') << "101010";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "1")
+    if(comp == "1" || comp1 == "1")
     {
         ss << std::setw(6) << std::setfill('0') << "111111";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "-1")
+    if(comp == "-1" || comp1 == "-1")
     {
         ss << std::setw(6) << std::setfill('0') << "111010";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "D")
+    if(comp == "D" || comp1 == "D")
     {
         ss << std::setw(6) << std::setfill('0') << "001100";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "A")
+    if(comp == "A" || comp1 == "A")
     {
         ss << std::setw(6) << std::setfill('0') << "110000";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "!D")
+    if(comp == "!D" || comp1 == "!D")
     {
         ss << std::setw(6) << std::setfill('0') << "001101";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "!A")
+    if(comp == "!A" || comp1 == "!A")
     {
         ss << std::setw(6) << std::setfill('0') << "110001";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "-D")
+    if(comp == "-D" || comp1 == "-D")
     {
         ss << std::setw(6) << std::setfill('0') << "001111";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "-A")
+    if(comp == "-A" || comp1 == "-A")
     {
         ss << std::setw(6) << std::setfill('0') << "110011";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "D+1")
+    if(comp == "D+1" || comp1 == "D+1")
     {
         ss << std::setw(6) << std::setfill('0') << "011111";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "A+1")
+    if(comp == "A+1" || comp1 == "A+1")
     {
         ss << std::setw(6) << std::setfill('0') << "110111";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "D-1")
+    if(comp == "D-1" || comp1 == "D-A")
     {
         ss << std::setw(6) << std::setfill('0') << "001110";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "A-1")
+    if(comp == "A-1" || comp1 == "A-1")
     {
         ss << std::setw(6) << std::setfill('0') << "110010";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "D+A")
+    if(comp == "D+A" || comp1 == "D+A")
     {
         ss << std::setw(6) << std::setfill('0') << "000010";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "D-A")
+    if(comp == "D-A" || comp1 == "D-A")
     {
         ss << std::setw(6) << std::setfill('0') << "010011";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "A-D")
+    if(comp == "A-D" || comp1 == "A-D")
     {
         ss << std::setw(6) << std::setfill('0') << "000111";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "D&A")
+    if(comp == "D&A" || comp1 == "D&A")
     {
         ss << std::setw(6) << std::setfill('0') << "000000";
         returnStr = ss.str();
         return returnStr;
     }
-    if(comp == "D|A")
+    if(comp == "D|A" || comp1 == "D|A")
     {
         ss << std::setw(6) << std::setfill('0') << "010101";
         returnStr = ss.str();
