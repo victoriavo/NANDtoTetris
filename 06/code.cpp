@@ -78,8 +78,8 @@ void Code::replaceAInstructions(string instructionLine, int index)
             int value;
             if(symbolTable.Symbols.empty())
             {
-                symbolTable.Symbols.insert(std::make_pair(symbolName, 1024));
-                value = 1024;
+                symbolTable.Symbols.insert(std::make_pair(symbolName, 16));
+                value = 16;
                 string binAddress = std::bitset<16>(value).to_string();
                 instructions[index] = binAddress;
                 cout << "size" << symbolTable.Symbols.empty() << endl;
@@ -87,10 +87,10 @@ void Code::replaceAInstructions(string instructionLine, int index)
             else
             {
                 int size = symbolTable.Symbols.size();
-                value = 1024 + size;
+                value = 16 + size;
                 string binAddress = std::bitset<16>(value).to_string();
                 instructions[index] = binAddress;
-                symbolTable.Symbols.insert(std::make_pair(symbolName, 1024 + size));
+                symbolTable.Symbols.insert(std::make_pair(symbolName, 16 + size));
             }
         }
 
