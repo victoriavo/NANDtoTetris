@@ -11,8 +11,14 @@ vector<string> Parser::readInputFile(char* inputFile)
         {
             while ( getline (myfile, line) )
             {
-                if((line[0] != '/') && (line[1] != '/') && (line.length() != 1)) //removes single line comments and blank lines
+                //removes single line comments and blank lines
+                if((line[0] != '/') && (line[1] != '/') && (line.length() != 1)
+                   //getting rid of labels since they don't translate to anything
+                    && ((line[0] != '(') && (line[line.length()-1] != ')')) )
                 {
+                        //get rid of whitespace
+                        std::string::iterator end_pos = std::remove(line.begin(), line.end(), ' ');
+                        line.erase(end_pos, line.end());
                         //handling for inline comments ex: @R2 //ugh another comment
                         line = line.substr(0, line.rfind("//"));
                         //add instruction to vector of instructions
@@ -34,8 +40,8 @@ vector<string> Parser::readInputFile(char* inputFile)
         else cout << "Unable to open file";
     
         //check vector of instructions
-        //for(int i = 0; i < instructions.size(); i++)
-            //cout << instructions[i] << endl;
+        for(int i = 0; i < instructions.size(); i++)
+            cout << instructions[i] << endl;
     }
     else
     {

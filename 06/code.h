@@ -22,6 +22,7 @@ class Code
     string destBin(string);
     string jumpBin(string);
     vector<string> compBin(string);
+    bool isNumericAddress(string);
     private:
     vector<string> instructions;
 };
